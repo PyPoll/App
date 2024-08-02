@@ -1,0 +1,10 @@
+{
+    "Welcome": "Welcome on Pypoll ! 👋",
+    "RegisterWith": "Register with",
+    "ContinueUnregistered": "Continue without registering",
+    "AlreadyHaveAnAccount": "I already have an account",
+    "Pseudo": "Pseudo",
+    "Email": "Email",
+    "Password": "Password",
+    "PasswordConfirm": "Password confirmation"
+}

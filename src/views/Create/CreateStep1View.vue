@@ -1,0 +1,150 @@
+<template>
+    <div class="flex flex-col grow h-full w-full space-y-8">
+        <!-- TITLE SECTION -->
+        <div class="flex flex-col h-fit w-full space-y-2">
+            <div class="flex justify-start items-center space-x-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-bold">Title</p>
+                </div>
+            </div>
+            <div class="flex bordered p-2">
+                <input type="text" class="w-full bg-transparent outline-none" placeholder="My new poll !"
+                    @change="title = ($event.target as any).value" />
+            </div>
+        </div>
+
+        <!-- DESCRIPTION SECTION -->
+        <div class="flex flex-col h-fit w-full space-y-2">
+            <div class="flex justify-start items-center space-x-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-bold">Description</p>
+                </div>
+            </div>
+            <div class="flex bordered p-2">
+                <textarea rows="3" class="w-full bg-transparent outline-none" placeholder="Do you like my new poll ?"
+                    spellcheck="true" @change="description = ($event.target as any).value" />
+            </div>
+        </div>
+
+        <!-- TAGS SECTION -->
+        <div class="flex flex-col h-fit w-full space-y-2">
+            <div class="flex justify-start items-center space-x-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-bold">Tags</p>
+                </div>
+                <div class="flex justify-center items-center card space-x-2 px-2 pt-1 pb-0.5">
+                    <p class="text-base"> {{ selectedTags.length }} </p>
+                    <p class="text-base"> / </p>
+                    <p class="text-base"> {{ nbTagsTotal }} </p>
+                </div>
+            </div>
+            <div class="flex bordered p-2">
+                <div class="flex grow w-full h-full overflow-y-hidden overflow-x-auto items-center">
+                    <div class="flex h-fit w-fit space-x-2">
+                        <button v-for="(tag, index) in selectedTags" :key="tag" @click="removeTag(index)"
+                            class="card py-1 px-2 min-w-0 max-w-[8em]">
+                            <p class="whitespace-nowrap text-ellipsis overflow-hidden max-w-full min-w-0">
+                                #{{ tag }}
+                            </p>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex w-fit h-full">
+                    <span class="h-full w-[3px] card mx-2" />
+                    <button @click="openCreateTagsModal()"
+                        class="flex w-fit h-full justify-center items-center p-1 pl-0.5">
+                        <PlusIcon class="w-6 h-6" />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <ModalView ref="modalCreateTags">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-semibold"> New tag </p>
+                </div>
+                <div>
+                    <div class="bordered p-2">
+                        <input type="text" name="tagname" ref="modalCreateTagsText"
+                            class="w-full bg-transparent outline-none" />
+                    </div>
+                </div>
+                <span class="flex my-2 h-1 w-full card" />
+                <div class="flex h-fit w-full justify-between items-center">
+                    <ButtonView @click="modalCreateTags?.hide()"> Cancel </ButtonView>
+                    <ButtonView @click="createNewTag"> Add </ButtonView>
+                </div>
+            </div>
+        </ModalView>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import ModalView from '@/components/ModalView.vue';
+import { PlusIcon } from '@heroicons/vue/24/outline';
+import ButtonView from '@/components/ButtonView.vue';
+
+export default defineComponent({
+    components: {
+        PlusIcon,
+        ModalView,
+        ButtonView
+    },
+    props: {
+        poll: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            nbTagsTotal: 5,
+            selectedTags: [] as string[],
+            title: '',
+            description: '',
+            modalCreateTags: null as typeof ModalView | null,
+            modalCreateTagsText: null as HTMLInputElement | null
+        }
+    },
+    mounted() {
+        this.modalCreateTags = this.$refs['modalCreateTags'] as typeof ModalView;
+        this.modalCreateTagsText = this.$refs['modalCreateTagsText'] as HTMLInputElement;
+    },
+    watch: {
+        title() {
+            // eslint-disable-next-line vue/no-mutating-props
+            this.poll.title = this.title;
+        },
+        description() {
+            // eslint-disable-next-line vue/no-mutating-props
+            this.poll.description = this.description;
+        }
+    },
+    methods: {
+        openCreateTagsModal() {
+            if (this.selectedTags.length >= this.nbTagsTotal) {
+                return;
+            }
+            this.modalCreateTags?.show();
+            this.modalCreateTagsText!.value = '';
+            this.modalCreateTagsText?.focus();
+        },
+        createNewTag() {
+            const tag = this.modalCreateTagsText?.value.trim().toLowerCase() || '';
+            if (!tag || tag.length < 2) return;
+            this.selectedTags.push(tag);
+            this.$forceUpdate();
+            this.modalCreateTags?.hide();
+            // eslint-disable-next-line vue/no-mutating-props
+            this.poll.tags = this.selectedTags;
+        },
+        removeTag(index) {
+            this.selectedTags.splice(index, 1);
+            this.$forceUpdate();
+            // eslint-disable-next-line vue/no-mutating-props
+            this.poll.tags = this.selectedTags;
+        }
+    }
+});
+</script>

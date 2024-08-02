@@ -1,0 +1,14 @@
+{
+    "WelcomeBack": "Glad to see you again! 😊",
+    "LoginWith": "Login with",
+    "ContinueWithoutRegistering": "Continue without registering",
+    "DontHaveAnAccount": "I don't have an account",
+    "ForgotPassword": "Forgot password?",
+    "LookMails": "Look at your mails!",
+    "LookMailsDesc1": "We sent you an email to connect to the application 😉",
+    "LookMailsDesc2": "Go to your mailbox to finalize the connection!",
+    "EmailLogging": "Logging in by email ...",
+    "EmailLogged": "Successfully logged in!",
+    "EmailChanging": "Changing email ...",
+    "EmailChanged": "Email changed successfully!"
+}
