@@ -3,7 +3,7 @@
         <div class="flex flex-col space-y-4 px-2">
             <div class="flex flex-col justify-center items-start">
                 <p> Email </p>
-                <InputView type="text" name="email" />
+                <InputView type="email" name="email" />
             </div>
         </div>
         <div class="flex justify-between items-center pt-1">
