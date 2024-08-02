@@ -8,7 +8,7 @@ const router = createRouter({
         { path: '/', name: 'content', component: ContentView },
         { path: '/emailLogin', name: 'emailLogin', component: () => import('../views/EmailLogin.vue') },
         { path: '/register', name: 'register', component: () => import('../views/RegisterView.vue') },
-        { path: '/login', name: 'login', component: () => import('../views/LoginView.vue') },
+        { path: '/login', name: 'login', component: () => import('../views/RegisterView.vue') },
         { path: '/create', name: 'create', component: () => import('../views/CreateView.vue') },
         { path: '/search', name: 'search', component: () => import('../views/SearchView.vue') },
         { path: '/account', name: 'account', component: () => import('../views/AccountView.vue') }

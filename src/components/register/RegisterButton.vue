@@ -5,11 +5,12 @@
                 <div class="flex space-x-1 whitespace-nowrap p-2 text-slate-50">
                     <ChevronRightIcon class="w-6 h-6 transition-all" :class="selected ? 'rotate-90' : ''" />
                     <p class="whitespace-nowrap">
-                        <GetText :context="Lang.CreateTranslationContext('register', 'RegisterWith')" />
+                        <GetText v-if="loginMode" :context="Lang.CreateTranslationContext('login', 'LoginWith')" />
+                        <GetText v-else :context="Lang.CreateTranslationContext('register', 'RegisterWith')" />
                     </p>
                     <b> {{ data.name }} </b>
                 </div>
-                <div ref="content" class="h-fit overflow-hidden transition-all" style="max-height: 0px;">
+                <div ref="content" class="h-fit w-full overflow-hidden transition-all" style="max-height: 0px;">
                     <div class="h-fit w-full p-2 pt-2 bg-slate-50 dark:bg-slate-700 rounded"
                         @click="ev => ev.stopPropagation()">
                         <slot />
@@ -43,6 +44,10 @@ export default defineComponent({
             default: true,
         },
         selected: {
+            type: Boolean,
+            default: false,
+        },
+        loginMode: {
             type: Boolean,
             default: false,
         }

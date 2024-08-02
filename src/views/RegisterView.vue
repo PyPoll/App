@@ -17,7 +17,10 @@
                 </div>
                 <div class="flex w-full h-fit justify-center">
                     <h2 class="text-xl">
-                        <GetText :context="Lang.CreateTranslationContext('register', 'Welcome')" />
+                        <GetText v-if="pageMode === 'register'" class="show-up"
+                            :context="Lang.CreateTranslationContext('register', 'Welcome')" />
+                        <GetText v-else class="show-up"
+                            :context="Lang.CreateTranslationContext('login', 'WelcomeBack')" />
                     </h2>
                 </div>
             </div>
@@ -29,42 +32,88 @@
                     class="absolute show-up text-slate-200 dark:text-slate-800"
                     :style="'top: ' + bubble.y + '%; left: ' + bubble.x + '%; animation-delay: ' + index * 100 + 'ms; width: ' + bubble.s + 'px; height: ' + bubble.s + 'px;'" />
             </div>
-            <div class="z-50 flex grow flex-col justify-center items-center">
-                <div class="flex flex-col w-min h-fit max-w-full max-h-full">
-                    <div class="show-up" style="animation-delay: 100ms;">
-                        <RegisterButton :data="{ name: 'Email' }" :selected="registerMode === 'Email'"
-                            :display="!registerMode || registerMode === 'Email'"
-                            @click="registerMode = registerMode ? undefined : 'Email'">
-                            <RegisterEmailPanel :onRegister="registerEmail" class="text-slate-700 dark:text-slate-200"
-                                :onCancel="() => registerMode = undefined" />
-                        </RegisterButton>
-                        <RegisterButton :data="{ name: 'Google' }" :selected="registerMode === 'Google'"
-                            :display="!registerMode || registerMode === 'Google'"
-                            @click="registerMode = registerMode ? undefined : 'Google'">
-                            <p>Work in progress</p>
-                        </RegisterButton>
-                        <RegisterButton :data="{ name: 'FurWaz' }" :selected="registerMode === 'FurWaz'"
-                            :display="!registerMode || registerMode === 'FurWaz'"
-                            @click="registerMode = registerMode ? undefined : 'FurWaz'">
-                            <p>Work in progress</p>
-                        </RegisterButton>
+            <div class="z-50 flex grow w-full h-full transition-all duration-500 ease-out-expo"
+                :class="pageMode === 'login' ? '-translate-x-[100%]' : ''">
+                <div class="flex grow shrink-0 w-full h-full justify-center items-center">
+                    <div class="flex flex-col w-min h-fit max-w-full max-h-full">
+                        <div class="show-up" style="animation-delay: 100ms;">
+                            <RegisterButton :data="{ name: 'Email' }" :selected="registerMode === 'Email'"
+                                :display="!registerMode || registerMode === 'Email'"
+                                @click="registerMode = registerMode ? undefined : 'Email'">
+                                <RegisterEmailPanel ref="registerEmailPanel" :onRegister="registerEmail"
+                                    class="text-slate-700 dark:text-slate-200"
+                                    :onCancel="() => registerMode = undefined" />
+                            </RegisterButton>
+                            <RegisterButton :data="{ name: 'Google' }" :selected="registerMode === 'Google'"
+                                :display="!registerMode || registerMode === 'Google'"
+                                @click="registerMode = registerMode ? undefined : 'Google'">
+                                <p>Work in progress</p>
+                            </RegisterButton>
+                            <RegisterButton :data="{ name: 'FurWaz' }" :selected="registerMode === 'FurWaz'"
+                                :display="!registerMode || registerMode === 'FurWaz'"
+                                @click="registerMode = registerMode ? undefined : 'FurWaz'">
+                                <p>Work in progress</p>
+                            </RegisterButton>
+                        </div>
+                        <div class="flex justify-center items-center"
+                            :class="registerMode === undefined ? 'show-up' : 'hide-down'">
+                            <button class="flex p-2">
+                                <p class="text-indigo-400">
+                                    <GetText
+                                        :context="Lang.CreateTranslationContext('register', 'ContinueUnregistered')" />
+                                </p>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex justify-center items-center"
-                        :class="registerMode === undefined ? 'show-up' : 'hide-down'">
-                        <button class="flex p-2">
-                            <p class="text-indigo-400">
-                                <GetText :context="Lang.CreateTranslationContext('register', 'ContinueUnregistered')" />
-                            </p>
-                        </button>
+                </div>
+                <div class="flex grow shrink-0 w-full h-full justify-center items-center">
+                    <div class="flex flex-col w-min h-fit max-w-full max-h-full">
+                        <div class="show-up" style="animation-delay: 100ms;">
+                            <RegisterButton :loginMode="true" :data="{ name: 'Email' }"
+                                :selected="loginMode === 'Email'" :display="!loginMode || loginMode === 'Email'"
+                                @click="loginMode = loginMode ? undefined : 'Email'">
+                                <LoginEmailPanel ref="loginEmailPanel" :onLogin="loginEmail"
+                                    class="text-slate-700 dark:text-slate-200"
+                                    :onCancel="() => loginMode = undefined" />
+                            </RegisterButton>
+                            <RegisterButton :loginMode="true" :data="{ name: 'Google' }"
+                                :selected="loginMode === 'Google'" :display="!loginMode || loginMode === 'Google'"
+                                @click="loginMode = loginMode ? undefined : 'Google'">
+                                <p>Work in progress</p>
+                            </RegisterButton>
+                            <RegisterButton :loginMode="true" :data="{ name: 'FurWaz' }"
+                                :selected="loginMode === 'FurWaz'" :display="!loginMode || loginMode === 'FurWaz'"
+                                @click="loginMode = loginMode ? undefined : 'FurWaz'">
+                                <p>Work in progress</p>
+                            </RegisterButton>
+                        </div>
+                        <div class="flex justify-center items-center"
+                            :class="loginMode === undefined ? 'show-up' : 'hide-down'">
+                            <button class="flex p-2">
+                                <p class="text-transparent">
+                                    - - - - -
+                                </p>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="z-50 flex justify-end">
+            <div class="absolute bottom-2 left-2 right-2 z-50 flex justify-end"
+                :class="pageMode === 'register' ? 'show-right' : 'hide-left pointer-events-none'">
                 <RouterLink to="/login" class="flex space-x-2 justify-center items-center">
                     <p>
                         <GetText :context="Lang.CreateTranslationContext('register', 'AlreadyHaveAnAccount')" />
                     </p>
                     <ArrowRightIcon class="w-4 h-4" />
+                </RouterLink>
+            </div>
+            <div class="absolute bottom-2 left-2 right-2 z-50 flex justify-start"
+                :class="pageMode === 'login' ? 'show-left' : 'hide-right pointer-events-none'">
+                <RouterLink to="/register" class="flex space-x-2 justify-center items-center">
+                    <ArrowLeftIcon class="w-4 h-4" />
+                    <p>
+                        <GetText :context="Lang.CreateTranslationContext('login', 'DontHaveAnAccount')" />
+                    </p>
                 </RouterLink>
             </div>
         </div>
@@ -82,18 +131,22 @@ import PypollIcon from '@/components/PypollIcon.vue';
 import RegisterButton from '@/components/register/RegisterButton.vue';
 import {
     ArrowRightIcon,
+    ArrowLeftIcon
 } from '@heroicons/vue/24/outline';
 import BubbleIcon from '@/components/BubbleIcon.vue';
 import RegisterEmailPanel from '@/components/register/RegisterEmailPanel.vue';
+import LoginEmailPanel from '@/components/register/LoginEmailPanel.vue';
 
 export default Vue.defineComponent({
     components: {
         ArrowRightIcon,
+        ArrowLeftIcon,
         GetText,
         PypollIcon,
         RegisterButton,
         BubbleIcon,
-        RegisterEmailPanel
+        RegisterEmailPanel,
+        LoginEmailPanel
     },
     setup() {
         return {}
@@ -101,24 +154,9 @@ export default Vue.defineComponent({
     data() {
         return {
             Lang,
+            pageMode: this.$route.fullPath.split('/').pop(), // 'register' or 'login'
             registerMode: undefined as string | undefined,
-            registerOptions: [
-                {
-                    name: "Email",
-                    disabled: false,
-                    onclick: () => this.registerWithEmail()
-                },
-                {
-                    name: "Google",
-                    disabled: true,
-                    onclick: () => this.registerWithGoogle()
-                },
-                {
-                    name: "FurWaz",
-                    disabled: true,
-                    onclick: () => this.registerWithFurWaz()
-                }
-            ],
+            loginMode: undefined as string | undefined,
             bubbles: [
                 { x: 10, y: 5, s: 14 },
                 { x: 15, y: 90, s: 20 },
@@ -142,6 +180,13 @@ export default Vue.defineComponent({
             registerZone.style.height = '67%';
         }, 10);
     },
+    watch: {
+        $route(to, from) {
+            this.pageMode = to.fullPath.split('/').pop();
+            this.registerMode = undefined;
+            this.loginMode = undefined;
+        }
+    },
     methods: {
         registerWithEmail() {
             if (this.registerMode)
@@ -163,9 +208,10 @@ export default Vue.defineComponent({
         },
 
         async registerEmail() {
+            const registerEmailPanel = this.$refs['registerEmailPanel'] as any;
             const inputs = {
-                pseudo: (document.querySelector('input[name="pseudo"]') as HTMLInputElement),
-                email: (document.querySelector('input[name="email"]') as HTMLInputElement)
+                pseudo: (registerEmailPanel.$el.querySelector('input[name="pseudo"]') as HTMLInputElement),
+                email: (registerEmailPanel.$el.querySelector('input[name="email"]') as HTMLInputElement)
             };
 
             for (const key in inputs) {
@@ -191,6 +237,50 @@ export default Vue.defineComponent({
             setTimeout(() => {
                 this.$router.push({ name: 'content' });
             }, 500);
+        },
+
+        async loginEmail() {
+            const loginEmailPanel = this.$refs['loginEmailPanel'] as any;
+            const inputs = {
+                email: (loginEmailPanel.$el.querySelector('input[name="email"]') as HTMLInputElement)
+            };
+
+            for (const key in inputs) {
+                if (!inputs[key].value) {
+                    inputs[key].focus();
+                    console.error('Missing field:', key);
+                    return;
+                }
+            }
+
+            const res = await API.Request(ROUTES.EMAIL.SENDMAIL(
+                inputs.email.value
+            ));
+            if (res.error) {
+                console.error(res.message);
+                return;
+            }
+
+            const modal = (this.$refs['emailModal'] as any);
+            modal.show();
+
+            this.loginUsingPollingToken(res.data);
+        },
+        async loginUsingPollingToken(token) {
+            const res = await API.Request(ROUTES.AUTH.LOGIN(token));
+            if (res.status === 504) {
+                this.loginUsingPollingToken(token);
+                return;
+            }
+
+            if (res.error) {
+                console.error(res.message);
+                return;
+            }
+
+            new User({ token: res.data }).fetch();
+            this.$router.push({ name: 'content' });
+            (this.$refs['emailModal'] as any)?.hide();
         }
     }
 });
