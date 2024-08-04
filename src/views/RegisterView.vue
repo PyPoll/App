@@ -117,6 +117,19 @@
                 </RouterLink>
             </div>
         </div>
+        <ModalView ref="emailModal">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <p class="text-xl font-bold pb-4">
+                    <GetText :context="Lang.CreateTranslationContext('login', 'LookMails')" />
+                </p>
+                <p class="text-center">
+                    <GetText :context="Lang.CreateTranslationContext('login', 'LookMailsDesc1')" />
+                </p>
+                <p class="text-center">
+                    <GetText :context="Lang.CreateTranslationContext('login', 'LookMailsDesc2')" />
+                </p>
+            </div>
+        </ModalView>
     </div>
 </template>
 
@@ -136,6 +149,7 @@ import {
 import BubbleIcon from '@/components/BubbleIcon.vue';
 import RegisterEmailPanel from '@/components/register/RegisterEmailPanel.vue';
 import LoginEmailPanel from '@/components/register/LoginEmailPanel.vue';
+import ModalView from '@/components/ModalView.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -146,7 +160,8 @@ export default Vue.defineComponent({
         RegisterButton,
         BubbleIcon,
         RegisterEmailPanel,
-        LoginEmailPanel
+        LoginEmailPanel,
+        ModalView
     },
     setup() {
         return {}
