@@ -9,13 +9,27 @@
                 <div class="flex justify-center items-center">
                     <p class="text-2xl md:text-3xl lg:text-4xl font-bold"> {{ poll.author.pseudo }} </p>
                 </div>
-                <div class="flex grow justify-end items-center">
-                    <button class="rounded-lg px-1 py-2">
+                <div class="flex flex-col grow justify-center items-end">
+                    <button class="rounded-lg px-1 py-2" @click="ToggleMenu">
                         <div class="flex space-x-1 md:space-x-2">
                             <span v-for="i in [1, 2, 3]" :key="i"
                                 class="h-1 w-1 md:h-2 md:w-2 rounded-full bg-slate-700 dark:bg-slate-200" />
                         </div>
                     </button>
+                    <div v-if="menuOpen" class="show-zoom relative h-0 w-0">
+                        <div class="absolute top-0 right-0 h-fit w-fit">
+                            <div
+                                class="flex flex-col bordered p-3 shadow-xl justify-left items-center space-y-4 bg-slate-700">
+                                <button v-for="option in menuOptions" :key="option.label" @click="option.action"
+                                    class="flex justify-start items-center w-full space-x-2">
+                                    <component :is="option.icon" class="h-6 w-6" />
+                                    <p class="whitespace-nowrap text-ellipsis overflow-hidden">
+                                        {{ option.label }}
+                                    </p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-col grow space-y-2">
@@ -61,10 +75,14 @@
 import * as Vue from 'vue';
 import PollimgView from '@/components/content/PollimgView.vue';
 import {
-    ChevronRightIcon
+    ChevronRightIcon,
+    UserIcon,
+    ShieldExclamationIcon,
+    ShareIcon
 } from '@heroicons/vue/24/outline';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
+import { Share } from '@capacitor/share';
 
 export default Vue.defineComponent({
     components: {
@@ -84,13 +102,56 @@ export default Vue.defineComponent({
         return {
             API,
             imgs: [] as { url: string, loading: boolean }[],
-            selectedAnswers: [] as number[]
+            selectedAnswers: [] as number[],
+            menuOpen: false,
+            menuOptions: [
+                {
+                    label: 'Voir le profil',
+                    icon: UserIcon,
+                    action: () => {
+                        this.$router.push(`/account?id=${this.poll.author.id}`)
+                    }
+                },
+                {
+                    label: 'Signaler',
+                    icon: ShieldExclamationIcon,
+                    action: () => { }
+                },
+                {
+                    label: 'Partager',
+                    icon: ShareIcon,
+                    action: async () => {
+                        const pollPath = window.location.href.substring(window.location.hostname.length + window.location.protocol.length + 2);
+                        const pollUrl = 'https://app.pypoll.com' + pollPath;
+                        if ((await Share.canShare()).value) {
+                            try {
+                                await Share.share({
+                                    title: this.poll.title,
+                                    url: pollUrl
+                                });
+                            } catch (err) { console.error(err); }
+                        } else {
+                            await navigator.clipboard.writeText(pollUrl);
+                        }
+                    }
+                }
+            ]
         }
     },
     mounted() {
         if (this.poll.medias && this.poll.medias.length) {
             this.loadMedia()
         }
+
+        window.addEventListener('mousedown', ev => {
+            if (this.menuOpen) {
+                setTimeout(() => {
+                    if (this.menuOpen) {
+                        this.menuOpen = false;
+                    }
+                }, 100);
+            }
+        });
     },
     watch: {
         poll: {
@@ -155,6 +216,9 @@ export default Vue.defineComponent({
                     url: imgUrl
                 };
             }
+        },
+        ToggleMenu() {
+            this.menuOpen = !this.menuOpen;
         }
     }
 });
