@@ -10,7 +10,7 @@
                     <p class="text-2xl md:text-3xl lg:text-4xl font-bold"> {{ poll.author.pseudo }} </p>
                 </div>
                 <div class="flex flex-col grow justify-center items-end">
-                    <button class="rounded-lg px-1 py-2" @click="ToggleMenu">
+                    <button class="rounded-lg px-1 py-2" @click="toggleMenu">
                         <div class="flex space-x-1 md:space-x-2">
                             <span v-for="i in [1, 2, 3]" :key="i"
                                 class="h-1 w-1 md:h-2 md:w-2 rounded-full bg-slate-700 dark:bg-slate-200" />
@@ -68,6 +68,25 @@
                 </button>
             </div>
         </div>
+        <ModalView ref="reportModal">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <div class="flex space-x-4 justify-center items-center pb-4">
+                    <ShieldExclamationIcon class="w-8 h-8 md:w-10 md:h-10 text-red-500" />
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('poll', 'Report')" />
+                    </p>
+                </div>
+                <div class="flex flex-col justify-start items-start space-y-2 w-full">
+                    <button v-for="type in reportTypes" :key="type" @click="() => reportPoll(type)"
+                        class="flex justify-center items-center space-x-2 p-2" :bg="false">
+                        <ChevronRightIcon class="w-6 h-6" />
+                        <p>
+                            <GetText :context="Lang.CreateTranslationContext('poll', type)" />
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </ModalView>
     </div>
 </template>
 
@@ -81,13 +100,21 @@ import {
     ShareIcon
 } from '@heroicons/vue/24/outline';
 import { API } from '@/scripts/API';
+import Lang from '@/scripts/Lang';
 import ROUTES from '@/scripts/routes';
 import { Share } from '@capacitor/share';
+import ModalView from '../ModalView.vue';
+import GetText from '@/components/GetText.vue';
+import ButtonView from '../ButtonView.vue';
 
 export default Vue.defineComponent({
     components: {
         ChevronRightIcon,
-        PollimgView
+        PollimgView,
+        ModalView,
+        GetText,
+        ButtonView,
+        ShieldExclamationIcon
     },
     props: {
         poll: {
@@ -101,6 +128,7 @@ export default Vue.defineComponent({
     data() {
         return {
             API,
+            Lang,
             imgs: [] as { url: string, loading: boolean }[],
             selectedAnswers: [] as number[],
             menuOpen: false,
@@ -115,7 +143,7 @@ export default Vue.defineComponent({
                 {
                     label: 'Signaler',
                     icon: ShieldExclamationIcon,
-                    action: () => { }
+                    action: () => { (this.$refs['reportModal'] as any)?.show(); }
                 },
                 {
                     label: 'Partager',
@@ -135,6 +163,15 @@ export default Vue.defineComponent({
                         }
                     }
                 }
+            ],
+            reportTypes: [
+                'SexualContent',
+                'Harassment',
+                'Violence',
+                'Hate',
+                'FakeNews',
+                'Spam',
+                'Other'
             ]
         }
     },
@@ -217,8 +254,12 @@ export default Vue.defineComponent({
                 };
             }
         },
-        ToggleMenu() {
+        toggleMenu() {
             this.menuOpen = !this.menuOpen;
+        },
+        reportPoll(type) {
+            (this.$refs['reportModal'] as any)?.hide();
+            alert("TODO : Report poll (report type is " + type + ")");
         }
     }
 });
