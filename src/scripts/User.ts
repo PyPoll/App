@@ -43,6 +43,7 @@ class User {
     }
 
     public update(data: any) {
+        this.id = data.id;
         this.pseudo = data.pseudo;
         this.bio = data.bio;
         this.email = data.email;
