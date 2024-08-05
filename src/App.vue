@@ -1,6 +1,6 @@
 <template>
     <div ref="content"
-        class="flex flex-col w-screen h-screen bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-50 overflow-hidden">
+        class="flex flex-col w-full h-full bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-50 overflow-hidden">
         <RouterView />
     </div>
 </template>

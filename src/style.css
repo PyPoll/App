@@ -4,8 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html, head, body {
+body, head, html {
     height: 100%;
+    width: 100%;
     font-family: 'Poppins', sans-serif;
 }
 
