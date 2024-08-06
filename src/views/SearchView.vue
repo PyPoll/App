@@ -5,7 +5,9 @@
                 <BackButtonView />
             </div>
             <div class="flex grow w-full h-full justify-center items-center p-4">
-                <p class="text-2xl md:text-3xl lg:text-4xl font-bold">Search</p>
+                <p class="text-2xl md:text-3xl lg:text-4xl font-bold">
+                    <GetText :context="Lang.CreateTranslationContext('search', 'Search')" />
+                </p>
             </div>
         </div>
     </div>
@@ -14,13 +16,18 @@
 <script lang="ts">
 import * as Vue from 'vue';
 import BackButtonView from '../components/BackButtonView.vue';
+import Lang from '@/scripts/Lang';
+import GetText from '@/components/GetText.vue';
 
 export default Vue.defineComponent({
     components: {
-        BackButtonView
+        BackButtonView,
+        GetText
     },
     setup() {
-        return {}
+        return {
+            Lang
+        }
     }
 });
 </script>

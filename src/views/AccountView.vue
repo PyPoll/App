@@ -5,7 +5,9 @@
                 <BackButtonView />
             </div>
             <div class="flex grow w-full h-full justify-center items-center p-4">
-                <p class="text-2xl md:text-3xl lg:text-4xl font-bold">Account</p>
+                <p class="text-2xl md:text-3xl lg:text-4xl font-bold">
+                    <GetText :context="Lang.CreateTranslationContext('account', 'Account')" />
+                </p>
             </div>
         </div>
         <div class="flex flex-col grow h-full w-full">
@@ -25,12 +27,16 @@
                     <div class="flex justify-center p-2">
                         <div class="flex space-x-2">
                             <p> {{ user?.nbFollowers ?? '--' }} </p>
-                            <p> Followers </p>
+                            <p>
+                                <GetText :context="Lang.CreateTranslationContext('account', 'Followers')" />
+                            </p>
                         </div>
                         <span class="h-full w-0.5 bg-slate-600 dark:bg-slate-400 mx-4 rounded-full" />
                         <div class="flex space-x-2">
                             <p> {{ user?.nbFollowing ?? '--' }} </p>
-                            <p> Following </p>
+                            <p>
+                                <GetText :context="Lang.CreateTranslationContext('account', 'Following')" />
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -43,7 +49,9 @@
                                     <component :is="menu.icon" class="w-8 h-8 md:w-10 md:h-10" />
                                 </div>
                                 <div class="flex justify-center items-center h-full w-full">
-                                    <p> {{ menu.label }} </p>
+                                    <p>
+                                        <GetText :context="Lang.CreateTranslationContext('account', menu.label)" />
+                                    </p>
                                 </div>
                             </button>
                         </div>
@@ -62,14 +70,19 @@ import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon } fr
 import User from '@/scripts/User';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
+import Lang from '@/scripts/Lang';
+import GetText from '@/components/GetText.vue';
 
 export default Vue.defineComponent({
     components: {
         BackButtonView,
-        ButtonView
+        ButtonView,
+        GetText
     },
     setup() {
-        return {}
+        return {
+            Lang
+        }
     },
     data() {
         return {

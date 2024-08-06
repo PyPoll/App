@@ -20,11 +20,11 @@
                         <div class="absolute top-0 right-0 h-fit w-fit">
                             <div
                                 class="flex flex-col bordered p-3 shadow-xl justify-left items-center space-y-4 bg-slate-700">
-                                <button v-for="option in menuOptions" :key="option.label" @click="option.action"
+                                <button v-for="(option, index) in menuOptions" :key="index" @click="option.action"
                                     class="flex justify-start items-center w-full space-x-2">
                                     <component :is="option.icon" class="h-6 w-6" />
                                     <p class="whitespace-nowrap text-ellipsis overflow-hidden">
-                                        {{ option.label }}
+                                        <GetText :context="option.label" />
                                     </p>
                                 </button>
                             </div>
@@ -73,7 +73,7 @@
                 <div class="flex space-x-4 justify-center items-center pb-4">
                     <ShieldExclamationIcon class="w-8 h-8 md:w-10 md:h-10 text-red-500" />
                     <p class="text-xl font-bold">
-                        <GetText :context="Lang.CreateTranslationContext('poll', 'Report')" />
+                        <GetText :context="Lang.CreateTranslationContext('poll', 'ReportTitle')" />
                     </p>
                 </div>
                 <div class="flex flex-col justify-start items-start space-y-2 w-full">
@@ -97,7 +97,8 @@ import {
     ChevronRightIcon,
     UserIcon,
     ShieldExclamationIcon,
-    ShareIcon
+    ShareIcon,
+    TrashIcon
 } from '@heroicons/vue/24/outline';
 import { API } from '@/scripts/API';
 import Lang from '@/scripts/Lang';
@@ -106,6 +107,7 @@ import { Share } from '@capacitor/share';
 import ModalView from '../ModalView.vue';
 import GetText from '@/components/GetText.vue';
 import ButtonView from '../ButtonView.vue';
+import User from '@/scripts/User';
 
 export default Vue.defineComponent({
     components: {
@@ -134,19 +136,19 @@ export default Vue.defineComponent({
             menuOpen: false,
             menuOptions: [
                 {
-                    label: 'Voir le profil',
+                    label: Lang.CreateTranslationContext('poll', 'SeeProfile'),
                     icon: UserIcon,
                     action: () => {
                         this.$router.push(`/account?id=${this.poll.author.id}`)
                     }
                 },
                 {
-                    label: 'Signaler',
+                    label: Lang.CreateTranslationContext('poll', 'Report'),
                     icon: ShieldExclamationIcon,
                     action: () => { (this.$refs['reportModal'] as any)?.show(); }
                 },
                 {
-                    label: 'Partager',
+                    label: Lang.CreateTranslationContext('poll', 'Share'),
                     icon: ShareIcon,
                     action: async () => {
                         const pollPath = window.location.href.substring(window.location.hostname.length + window.location.protocol.length + 2);
@@ -189,6 +191,21 @@ export default Vue.defineComponent({
                 }, 100);
             }
         });
+
+        if ((this.poll.author.id || this.poll.authorId) === User.CurrentUser?.id) {
+            this.menuOptions.push({
+                label: Lang.CreateTranslationContext('verbs', 'Delete'),
+                icon: TrashIcon,
+                action: async () => {
+                    const res = await API.RequestLogged(ROUTES.POLLS.DELETE(this.poll.id));
+                    if (res.error) {
+                        console.error(res.message);
+                    } else {
+                        this.$router.go(0);
+                    }
+                }
+            })
+        }
     },
     watch: {
         poll: {
