@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pypoll</string>
+    <string name="title_activity_main">Pypoll</string>
+    <string name="package_name">com.furwaz.Pypoll</string>
+    <string name="custom_url_scheme">com.furwaz.Pypoll</string>
+</resources>
