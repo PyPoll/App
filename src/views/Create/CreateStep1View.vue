@@ -4,11 +4,13 @@
         <div class="flex flex-col h-fit w-full space-y-2">
             <div class="flex justify-start items-center space-x-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-bold">Title</p>
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'Title')" />
+                    </p>
                 </div>
             </div>
             <div class="flex bordered p-2">
-                <input type="text" class="w-full bg-transparent outline-none" placeholder="My new poll !"
+                <input type="text" class="w-full bg-transparent outline-none" :placeholder="titlePlaceholder"
                     @change="title = ($event.target as any).value" />
             </div>
         </div>
@@ -17,11 +19,13 @@
         <div class="flex flex-col h-fit w-full space-y-2">
             <div class="flex justify-start items-center space-x-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-bold">Description</p>
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'Description')" />
+                    </p>
                 </div>
             </div>
             <div class="flex bordered p-2">
-                <textarea rows="3" class="w-full bg-transparent outline-none" placeholder="Do you like my new poll ?"
+                <textarea rows="3" class="w-full bg-transparent outline-none" :placeholder="descriptionPlaceholder"
                     spellcheck="true" @change="description = ($event.target as any).value" />
             </div>
         </div>
@@ -30,7 +34,9 @@
         <div class="flex flex-col h-fit w-full space-y-2">
             <div class="flex justify-start items-center space-x-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-bold">Tags</p>
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'Tags')" />
+                    </p>
                 </div>
                 <div class="flex justify-center items-center card space-x-2 px-2 pt-1 pb-0.5">
                     <p class="text-base"> {{ selectedTags.length }} </p>
@@ -61,7 +67,9 @@
         <ModalView ref="modalCreateTags">
             <div class="flex flex-col justify-center items-center space-y-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-semibold"> New tag </p>
+                    <p class="text-xl font-semibold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'NewTag')" />
+                    </p>
                 </div>
                 <div>
                     <div class="bordered p-2">
@@ -71,8 +79,12 @@
                 </div>
                 <span class="flex my-2 h-1 w-full card" />
                 <div class="flex h-fit w-full justify-between items-center">
-                    <ButtonView @click="modalCreateTags?.hide()"> Cancel </ButtonView>
-                    <ButtonView @click="createNewTag"> Add </ButtonView>
+                    <ButtonView @click="modalCreateTags?.hide()" :bg="false">
+                        <GetText :context="Lang.CreateTranslationContext('verbs', 'Cancel')" />
+                    </ButtonView>
+                    <ButtonView @click="createNewTag">
+                        <GetText :context="Lang.CreateTranslationContext('verbs', 'Add')" />
+                    </ButtonView>
                 </div>
             </div>
         </ModalView>
@@ -84,12 +96,15 @@ import { defineComponent } from 'vue';
 import ModalView from '@/components/ModalView.vue';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import ButtonView from '@/components/ButtonView.vue';
+import Lang from '@/scripts/Lang';
+import GetText from '@/components/GetText.vue';
 
 export default defineComponent({
     components: {
         PlusIcon,
         ModalView,
-        ButtonView
+        ButtonView,
+        GetText
     },
     props: {
         poll: {
@@ -99,17 +114,23 @@ export default defineComponent({
     },
     data() {
         return {
+            Lang,
             nbTagsTotal: 5,
             selectedTags: [] as string[],
             title: '',
             description: '',
             modalCreateTags: null as typeof ModalView | null,
-            modalCreateTagsText: null as HTMLInputElement | null
+            modalCreateTagsText: null as HTMLInputElement | null,
+            titlePlaceholder: '',
+            descriptionPlaceholder: '',
         }
     },
     mounted() {
         this.modalCreateTags = this.$refs['modalCreateTags'] as typeof ModalView;
         this.modalCreateTagsText = this.$refs['modalCreateTagsText'] as HTMLInputElement;
+
+        Lang.GetText(Lang.CreateTranslationContext('create', 'TitlePlaceholder'), text => this.titlePlaceholder = text);
+        Lang.GetText(Lang.CreateTranslationContext('create', 'DescriptionPlaceholder'), text => this.descriptionPlaceholder = text);
     },
     watch: {
         title() {

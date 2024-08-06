@@ -4,13 +4,17 @@
         <div class="flex flex-col h-fit w-full space-y-2">
             <div class="flex justify-start items-center space-x-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-bold">Type of answer</p>
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'AnswerType')" />
+                    </p>
                 </div>
             </div>
             <div class="flex bordered p-2">
                 <select name="answertype" class="w-full bg-transparent outline-none" :value="answerType"
                     @change="answerType = ($event.target as any).value">
-                    <option v-for="type in answerTypes" :key="type.value" :value="type.value">{{ type.label }}</option>
+                    <option v-for="type in answerTypes" :key="type.value" :value="type.value">
+                        <GetText :context="Lang.CreateTranslationContext('create', type.label)" />
+                    </option>
                 </select>
             </div>
         </div>
@@ -45,14 +49,18 @@
                     </div>
                 </div>
                 <div v-show="answers.length < nbAnswersTotal" class="flex justify-center items-center w-full">
-                    <ButtonView @click="addAnswer()" class="w-fit">Add answer</ButtonView>
+                    <ButtonView @click="addAnswer()" class="w-fit">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'AddAnswer')" />
+                    </ButtonView>
                 </div>
             </div>
         </div>
         <ModalView ref="answerEmojiModal">
             <div class="flex flex-col justify-center items-center space-y-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-semibold"> Choose an emoji </p>
+                    <p class="text-xl font-semibold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'SelectEmoji')" />
+                    </p>
                 </div>
                 <div class="flex grow h-full w-full p-2 flex-wrap justify-evenly">
                     <div v-for="emoji in emojis" :key="emoji" class="w-fit h-fit m-2">
@@ -69,24 +77,22 @@
 <script lang="ts">
 import ButtonView from '@/components/ButtonView.vue';
 import ModalView from '@/components/ModalView.vue';
+import Lang from '@/scripts/Lang';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { defineComponent } from 'vue';
+import GetText from '@/components/GetText.vue';
 
 interface Answer {
     emoji: string;
     label: string;
 }
 
-const answerTypes = [
-    { value: 'unique', label: 'Unique choice' },
-    { value: 'multiple', label: 'Multiple choice' }
-];
-
 export default defineComponent({
     components: {
         ButtonView,
         XMarkIcon,
-        ModalView
+        ModalView,
+        GetText
     },
     props: {
         poll: {
@@ -96,8 +102,12 @@ export default defineComponent({
     },
     data() {
         return {
+            Lang,
             answerType: 'unique',
-            answerTypes,
+            answerTypes: [
+                { value: 'unique', label: 'UniqueChoice' },
+                { value: 'multiple', label: 'MultipleChoice' }
+            ],
             answers: [] as Answer[],
             emojis: ['🍇', '🍈', '🍉', '🍊', '🍋', '🍌', '🍍', '🥭', '🍎', '🍏', '🍐', '🍑'],
             nbAnswersTotal: 4,
@@ -116,16 +126,22 @@ export default defineComponent({
         }
     },
     methods: {
-        addAnswer() {
-            this.answers.push({ emoji: this.getRandomEmoji(), label: this.getRandomAnswer() });
+        async addAnswer() {
+            this.answers.push({ emoji: this.getRandomEmoji(), label: await this.getRandomAnswer() });
             // eslint-disable-next-line vue/no-mutating-props
             this.poll.answers = this.answers;
         },
         getRandomEmoji() {
             return this.emojis[Math.floor(Math.random() * this.emojis.length)];
         },
-        getRandomAnswer() {
-            const answers = ['Yes :)', 'No :(', 'Maybe ...', 'I don\'t know :/', 'I don\'t care >:('];
+        async getRandomAnswer() {
+            const answers = [
+                await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'AnswerTemplate1')),
+                await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'AnswerTemplate2')),
+                await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'AnswerTemplate3')),
+                await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'AnswerTemplate4')),
+                await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'AnswerTemplate5')),
+            ];
             return answers[Math.floor(Math.random() * answers.length)];
         },
         removeAnswer(index) {

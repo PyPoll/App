@@ -4,7 +4,9 @@
         <div class="flex flex-col h-fit w-full space-y-2">
             <div class="flex justify-start items-center space-x-4">
                 <div class="flex justify-center items-center">
-                    <p class="text-xl font-bold">Medias</p>
+                    <p class="text-xl font-bold">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'Medias')" />
+                    </p>
                 </div>
             </div>
             <div class="flex flex-col p-2 space-y-4">
@@ -25,9 +27,20 @@
                             </button>
                         </div>
                     </div>
+                    <div v-if="files.length <= 0"
+                        class="flex flex-col justify-center items-center space-y-4 bordered p-4 text-slate-500 dark:text-slate-300">
+                        <p class="text-center font-bold text-xl">
+                            <GetText :context="Lang.CreateTranslationContext('create', 'NoMedia')" />
+                        </p>
+                        <p class="text-center">
+                            <GetText :context="Lang.CreateTranslationContext('create', 'NoMediaDesc')" />
+                        </p>
+                    </div>
                 </div>
                 <div v-show="files && files.length < 4" class="flex w-full h-fit justify-center items-center">
-                    <ButtonView @click="askForFile">Add</ButtonView>
+                    <ButtonView @click="askForFile">
+                        <GetText :context="Lang.CreateTranslationContext('create', 'AddMedia')" />
+                    </ButtonView>
                 </div>
             </div>
         </div>
@@ -36,13 +49,16 @@
 
 <script lang="ts">
 import ButtonView from '@/components/ButtonView.vue';
+import Lang from '@/scripts/Lang';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { defineComponent } from 'vue';
+import GetText from '@/components/GetText.vue';
 
 export default defineComponent({
     components: {
         ButtonView,
-        XMarkIcon
+        XMarkIcon,
+        GetText
     },
     props: {
         poll: {
@@ -52,6 +68,7 @@ export default defineComponent({
     },
     data() {
         return {
+            Lang,
             files: [] as any[]
         }
     },

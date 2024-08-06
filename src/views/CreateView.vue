@@ -6,7 +6,9 @@
             </div>
             <div class="flex grow w-full h-full justify-center items-center p-4">
                 <p class="text-2xl md:text-3xl lg:text-4xl font-bold">
-                    {{ nbStep < nbStepsTotal ? 'Create a poll' : 'Is it all good ?' }} </p>
+                    <GetText
+                        :context="Lang.CreateTranslationContext('create', (nbStep < nbStepsTotal) ? 'CreatePoll' : 'AllGood')" />
+                </p>
             </div>
         </div>
         <div class="flex flex-col grow min-h-0 max-h-full h-fit w-full">
