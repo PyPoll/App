@@ -1,9 +1,9 @@
 <template>
-    <div v-if="!loading">
+    <span v-if="!loading">
         <span v-for="line in text.split('\n')" :key="line">
-            {{ line }}
+            {{ line }} <br>
         </span>
-    </div>
+    </span>
     <span v-else class="flex w-16 h-3 rounded-2xl animate-text-loading" />
 </template>
 

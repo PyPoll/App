@@ -6,12 +6,14 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         { path: '/', name: 'content', component: ContentView },
-        { path: '/emailLogin', name: 'emailLogin', component: () => import('../views/EmailLogin.vue') },
+        { path: '/emailLogin', name: 'email-login', component: () => import('../views/EmailLogin.vue') },
         { path: '/register', name: 'register', component: () => import('../views/RegisterView.vue') },
         { path: '/login', name: 'login', component: () => import('../views/RegisterView.vue') },
         { path: '/create', name: 'create', component: () => import('../views/CreateView.vue') },
         { path: '/search', name: 'search', component: () => import('../views/SearchView.vue') },
-        { path: '/account', name: 'account', component: () => import('../views/AccountView.vue') }
+        { path: '/account', name: 'account', component: () => import('../views/AccountView.vue') },
+        { path: '/settings', name: 'settings', component: () => import('../views/SettingsView.vue') },
+        { path: '/settings/account', name: 'settings-account', component: () => import('../views/Settings/SettingsAccountView.vue') }
     ]
 });
 

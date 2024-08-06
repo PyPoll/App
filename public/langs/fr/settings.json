@@ -1,0 +1,18 @@
+{
+    "Settings": "Paramètres",
+    "Account": "Compte",
+    "Informations": "Informations",
+    "Language": "Langue",
+    "Theme": "Thème",
+    "Notifications": "Notifications",
+    "Other": "Autre",
+    "PrivacyPolicy": "Politique de confidentialité",
+    "TermsOfService": "Conditions d'utilisation",
+    "AccountSettings": "Param. du compte",
+    "Actions": "Actions",
+    "Pseudo": "Pseudo",
+    "Email": "Email",
+    "DeleteAccount": "Supprimer le compte",
+    "Logout": "Se déconnecter",
+    "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?\nCette action est irréversible."
+}

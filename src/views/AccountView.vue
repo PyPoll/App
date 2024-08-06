@@ -9,6 +9,11 @@
                     <GetText :context="Lang.CreateTranslationContext('account', 'Account')" />
                 </p>
             </div>
+            <div class="absolute right-0 flex h-full justify-center items-center p-2">
+                <button class="p-2 md:p-3 lg:p-4" @click="$router.push({ name: 'settings' })">
+                    <Cog6ToothIcon class="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+                </button>
+            </div>
         </div>
         <div class="flex flex-col grow h-full w-full">
             <div class="flex flex-col grow h-full w-full p-4">
@@ -41,21 +46,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col justify-center w-full h-full">
-                    <div class="flex overflow-x-hidden overflow-y-auto p-4">
-                        <div v-if="ownUser && !viewMode" class="flex flex-col space-y-4 w-full">
-                            <button v-for="menu in menus" :key="menu.label" @click="menu.onclick()"
-                                class="flex bordered p-2 w-full max-w-[14em] mx-auto">
-                                <div class="flex justify-center items-center h-full w-fit">
-                                    <component :is="menu.icon" class="w-8 h-8 md:w-10 md:h-10" />
-                                </div>
-                                <div class="flex justify-center items-center h-full w-full">
-                                    <p>
-                                        <GetText :context="Lang.CreateTranslationContext('account', menu.label)" />
-                                    </p>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -77,7 +68,8 @@ export default Vue.defineComponent({
     components: {
         BackButtonView,
         ButtonView,
-        GetText
+        GetText,
+        Cog6ToothIcon
     },
     setup() {
         return {
@@ -88,24 +80,7 @@ export default Vue.defineComponent({
         return {
             user: undefined as User | undefined,
             urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '' + User.CurrentUser?.id),
-            viewMode: window.location.search.includes('id='),
-            menus: [
-                {
-                    label: 'Settings',
-                    icon: Cog6ToothIcon,
-                    onclick: () => this.$router.push({ name: 'settings' })
-                },
-                {
-                    label: 'Polls',
-                    icon: DocumentChartBarIcon,
-                    onclick: () => this.$router.push({ name: 'polls' })
-                },
-                {
-                    label: 'Logout',
-                    icon: ArrowLeftStartOnRectangleIcon,
-                    onclick: () => this.logout()
-                }
-            ]
+            viewMode: window.location.search.includes('id=')
         }
     },
     mounted() {
