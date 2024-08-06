@@ -1,4 +1,4 @@
-package com.furwaz.Pypoll;
+package com.furwaz.pypoll;
 
 import com.getcapacitor.BridgeActivity;
 

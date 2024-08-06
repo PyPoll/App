@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.furwaz.Pypoll"
+    namespace "com.furwaz.pypoll"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.furwaz.Pypoll"
+        applicationId "com.furwaz.pypoll"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -20,7 +20,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const connected = User.CurrentUser !== null;
     const bypassRoutes = ['register', 'login', 'emailLogin', 'emailChange'];
-    if (bypassRoutes.indexOf(to.name as string) < 0 && !connected) {
+    let routeBypassed = false;
+    for (const route of bypassRoutes) {
+        if (to.name?.toString().includes(route)) {
+            routeBypassed = true;
+            break;
+        }
+    }
+    if (!connected && !routeBypassed) {
         next({ name: 'register' });
         return;
     }
