@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.furwaz.Pypoll',
+  appId: 'com.furwaz.pypoll',
   appName: 'Pypoll',
   webDir: 'dist'
 };
