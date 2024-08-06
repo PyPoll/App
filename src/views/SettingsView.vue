@@ -20,7 +20,7 @@
                     </div>
                     <div class="flex flex-col space-y-2 p-2 w-full">
                         <div class="flex flex-col space-y-4 p-4 bordered w-full">
-                            <button @click="this.$router.push({ name: 'settings-account' })"
+                            <button @click="$router.push({ name: 'settings-account' })"
                                 class="flex justify-between items-center min-w-0 max-w-full">
                                 <div class="flex space-x-2 min-w-0 max-w-full">
                                     <div class="flex">
