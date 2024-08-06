@@ -10,8 +10,8 @@
                 </div>
             </div>
             <div class="flex bordered p-2">
-                <input type="text" class="w-full bg-transparent outline-none" :placeholder="titlePlaceholder"
-                    @change="title = ($event.target as any).value" />
+                <input type="text" name="title" class="w-full bg-transparent outline-none"
+                    :placeholder="titlePlaceholder" @change="title = ($event.target as any).value" />
             </div>
         </div>
 
@@ -25,8 +25,9 @@
                 </div>
             </div>
             <div class="flex bordered p-2">
-                <textarea rows="3" class="w-full bg-transparent outline-none" :placeholder="descriptionPlaceholder"
-                    spellcheck="true" @change="description = ($event.target as any).value" />
+                <textarea name="description" rows="3" class="w-full bg-transparent outline-none"
+                    :placeholder="descriptionPlaceholder" spellcheck="true"
+                    @change="description = ($event.target as any).value" />
             </div>
         </div>
 
@@ -165,6 +166,11 @@ export default defineComponent({
             this.$forceUpdate();
             // eslint-disable-next-line vue/no-mutating-props
             this.poll.tags = this.selectedTags;
+        },
+        validate() {
+            const titleInput = document.querySelector('input[name="title"]') as HTMLInputElement;
+            const descriptionInput = document.querySelector('textarea[name="description"]') as HTMLTextAreaElement;
+            return titleInput && titleInput.value.length > 2 && descriptionInput && descriptionInput.value.length > 2;
         }
     }
 });

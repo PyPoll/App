@@ -13,13 +13,13 @@
         </div>
         <div class="flex flex-col grow min-h-0 max-h-full h-fit w-full">
             <div class="flex flex-col grow min-h-0 max-h-full h-full w-full p-4">
-                <CreateStep1View v-show="nbStep === 1" :class="movement > 0 ? 'show-left' : 'show-right'"
+                <CreateStep1View ref="step-1" v-show="nbStep === 1" :class="movement > 0 ? 'show-left' : 'show-right'"
                     :poll="poll" />
-                <CreateStep2View v-show="nbStep === 2" :class="movement > 0 ? 'show-left' : 'show-right'"
+                <CreateStep2View ref="step-2" v-show="nbStep === 2" :class="movement > 0 ? 'show-left' : 'show-right'"
                     :poll="poll" />
-                <CreateStep3View v-show="nbStep === 3" :class="movement > 0 ? 'show-left' : 'show-right'"
+                <CreateStep3View ref="step-3" v-show="nbStep === 3" :class="movement > 0 ? 'show-left' : 'show-right'"
                     :poll="poll" />
-                <CreateStep4View v-show="nbStep === 4" :class="movement > 0 ? 'show-left' : 'show-right'"
+                <CreateStep4View ref="step-4" v-show="nbStep === 4" :class="movement > 0 ? 'show-left' : 'show-right'"
                     :poll="poll" />
             </div>
             <div class="flex justify-between items-center p-2">
@@ -31,7 +31,8 @@
                     <p> / </p>
                     <p> {{ nbStepsTotal }} </p>
                 </div>
-                <ButtonView @click="nextStep()">
+                <ButtonView ref="next-button" @click="() => { if (canGoNext()) nextStep(); }" class="transition-all"
+                    :class="nextValidated ? '' : 'opacity-50 pointer-events-none'">
                     <ArrowRightIcon v-if="nbStep < nbStepsTotal" class="w-5 h-5" />
                     <CheckIcon v-else class="w-5 h-5" />
                 </ButtonView>
@@ -105,11 +106,15 @@ export default defineComponent({
                 answers: [],
                 medias: []
             },
-            uploadModal: null as typeof ModalView | null
+            uploadModal: null as typeof ModalView | null,
+            nextValidated: false
         }
     },
     mounted() {
         this.uploadModal = this.$refs['uploadModal'] as typeof ModalView;
+        setInterval(() => {
+            this.nextValidated = this.canGoNext();
+        }, 500);
     },
     methods: {
         nextStep() {
@@ -190,6 +195,12 @@ export default defineComponent({
                 };
                 reader.readAsDataURL(media);
             });
+        },
+        canGoNext() {
+            const el = this.$refs[`step-${this.nbStep}`] as any;
+            if (!el) return false;
+            if (!el.validate) return true;
+            return el.validate();
         }
     }
 });
