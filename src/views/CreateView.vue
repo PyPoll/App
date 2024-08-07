@@ -160,7 +160,7 @@ export default defineComponent({
                 if (res.error) {
                     console.log(res.message);
                     await API.RequestLogged(ROUTES.POLLS.DELETE(poll.id));
-                    return;
+                    break;
                 }
                 index++;
             }
@@ -193,13 +193,15 @@ export default defineComponent({
                             reject('Could not compress media');
                             return;
                         }
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        ctx.drawImage(img, 0, 0, img.width, img.height);
+                        const maxSize = 2048;
+                        const imgRatio = img.width / img.height;
+                        canvas.width = imgRatio > 1 ? maxSize : maxSize * imgRatio;
+                        canvas.height = imgRatio > 1 ? maxSize / imgRatio : maxSize;
+                        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
                         canvas.toBlob((blob) => {
                             const newFile = new File([blob as Blob], media.name, { type: 'image/jpeg' });
                             resolve(newFile);
-                        }, 'image/jpeg', 0.7);
+                        }, 'image/jpeg', 0.6);
                     };
                     img.src = e.target?.result as string;
                 };
