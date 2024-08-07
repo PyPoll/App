@@ -16,7 +16,7 @@
                                 class="h-1 w-1 md:h-2 md:w-2 rounded-full bg-slate-700 dark:bg-slate-200" />
                         </div>
                     </button>
-                    <div v-if="menuOpen" class="show-zoom relative h-0 w-0">
+                    <div v-if="menuOpen" class="z-20 show-zoom relative h-0 w-0">
                         <div class="absolute top-0 right-0 h-fit w-fit">
                             <div
                                 class="flex flex-col bordered p-3 shadow-xl justify-left items-center space-y-4 bg-slate-50 dark:bg-slate-700">

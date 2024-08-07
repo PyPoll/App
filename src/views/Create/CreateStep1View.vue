@@ -154,7 +154,7 @@ export default defineComponent({
         },
         createNewTag() {
             const tag = this.modalCreateTagsText?.value.trim().toLowerCase() || '';
-            if (!tag || tag.length < 2) return;
+            if (!tag || tag.length < 2 || this.selectedTags.includes(tag)) return;
             this.selectedTags.push(tag);
             this.$forceUpdate();
             this.modalCreateTags?.hide();

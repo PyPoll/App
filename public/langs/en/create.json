@@ -1,7 +1,6 @@
 {
     "CreatePoll": "Create a poll",
     "AllGood": "Is it all good?",
-    "OneSecond": "One second...",
     "Title": "Title",
     "Description": "Description",
     "Tags": "Tags",
@@ -22,5 +21,8 @@
     "AnswerTemplate3": "Maybe...",
     "AnswerTemplate4": "I don't know :/",
     "AnswerTemplate5": "I don't care >:(",
-    "SelectEmoji": "Select an emoji"
+    "SelectEmoji": "Select an emoji",
+    "UploadingPoll": "Uploading poll...",
+    "CompressingMedia": "Compressing media...",
+    "UploadingMedia": "Uploading media {index} / {total}..."
 }

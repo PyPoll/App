@@ -45,7 +45,9 @@
                         <GetText :context="Lang.CreateTranslationContext('verbs', 'Uploading')" />
                         <span>🫡</span>
                     </p>
-                    <p class="italic"> One second ... </p>
+                    <p class="italic">
+                        <GetText :context="Lang.CreateTranslationContext('create', messageKey, messageFormat)" />
+                    </p>
                 </div>
                 <div class="flex grow h-full w-full justify-center items-center py-12 px-20">
                     <LoadingIcon />
@@ -107,7 +109,9 @@ export default defineComponent({
                 medias: []
             },
             uploadModal: null as typeof ModalView | null,
-            nextValidated: false
+            nextValidated: false,
+            messageKey: 'UploadingPoll',
+            messageFormat: {} as any,
         }
     },
     mounted() {
@@ -122,7 +126,7 @@ export default defineComponent({
             if (this.nbStep < this.nbStepsTotal) {
                 this.nbStep += 1;
             } else {
-                this.updatePoll();
+                this.uploadPoll();
             }
         },
         prevStep() {
@@ -131,8 +135,9 @@ export default defineComponent({
                 this.nbStep -= 1;
             }
         },
-        async updatePoll() {
+        async uploadPoll() {
             this.uploadModal?.show();
+            this.messageKey = 'UploadingPoll';
             const pollres = await API.RequestLogged(ROUTES.POLLS.CREATE(
                 this.poll.title, // title
                 this.poll.description, // description
@@ -146,13 +151,18 @@ export default defineComponent({
             }
             const poll = pollres.data;
 
+            let index = 0;
+            this.messageKey = 'CompressingMedia';
             for (const media of await this.createCompressedMedias()) {
+                this.messageKey = 'UploadingMedia';
+                this.messageFormat = { index, total: this.poll.medias.length };
                 const res = await API.SendFileLogged(ROUTES.POLLS.MEDIA(poll.id), media);
                 if (res.error) {
                     console.log(res.message);
                     await API.RequestLogged(ROUTES.POLLS.DELETE(poll.id));
                     return;
                 }
+                index++;
             }
 
             this.done();
