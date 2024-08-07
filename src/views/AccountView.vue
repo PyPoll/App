@@ -102,6 +102,9 @@ export default Vue.defineComponent({
                 }
             } else {
                 this.user = res.data;
+                if (this.ownUser) {
+                    User.CurrentUser?.update(res.data);
+                }
             }
         },
         logout() {
