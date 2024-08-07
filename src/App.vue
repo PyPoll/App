@@ -12,6 +12,8 @@ import { StatusBar, Style as StatusBarStyle } from '@capacitor/status-bar';
 import { Toast } from '@capacitor/toast';
 import { App as CapacitorApp } from '@capacitor/app';
 import { API } from './scripts/API';
+import User from './scripts/User';
+import ROUTES from './scripts/routes';
 
 export default Vue.defineComponent({
     components: {
@@ -57,6 +59,18 @@ export default Vue.defineComponent({
 
         // setup api
         API.Setup(import.meta.env.VITE_API_URL);
+
+        // Check if user is still valid
+        if (User.CurrentUser) {
+            API.RequestLogged(ROUTES.USERS.ME.GET()).then(res => {
+                if (res.error) {
+                    console.error(res.message);
+                    User.Forget();
+                } else {
+                    User.CurrentUser?.update(res.data);
+                }
+            }).catch(console.error);
+        }
     }
 });
 </script>
