@@ -19,7 +19,7 @@
                     <div v-if="menuOpen" class="show-zoom relative h-0 w-0">
                         <div class="absolute top-0 right-0 h-fit w-fit">
                             <div
-                                class="flex flex-col bordered p-3 shadow-xl justify-left items-center space-y-4 bg-slate-700">
+                                class="flex flex-col bordered p-3 shadow-xl justify-left items-center space-y-4 bg-slate-50 dark:bg-slate-700">
                                 <button v-for="(option, index) in menuOptions" :key="index" @click="option.action"
                                     class="flex justify-start items-center w-full space-x-2">
                                     <component :is="option.icon" class="h-6 w-6" />

@@ -9,7 +9,7 @@
                     <GetText :context="Lang.CreateTranslationContext('account', 'Account')" />
                 </p>
             </div>
-            <div class="absolute right-0 flex h-full justify-center items-center p-2">
+            <div v-if="!viewMode" class="absolute right-0 flex h-full justify-center items-center p-2">
                 <button class="p-2 md:p-3 lg:p-4" @click="$router.push({ name: 'settings' })">
                     <Cog6ToothIcon class="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                 </button>
@@ -26,9 +26,6 @@
                     <div class="flex justify-center pt-2">
                         <p class="text-2xl font-semibold"> {{ user?.pseudo ?? '- - - - -' }} </p>
                     </div>
-                    <div class="flex justify-center text-slate-500 dark:text-slate-400">
-                        <p class="italic whitespace-nowrap text-ellipsis overflow-hidden"> {{ user?.bio }} </p>
-                    </div>
                     <div class="flex justify-center p-2">
                         <div class="flex space-x-2">
                             <p> {{ user?.nbFollowers ?? '--' }} </p>
@@ -44,6 +41,10 @@
                             </p>
                         </div>
                     </div>
+                    <div class="flex justify-center opacity-70">
+                        <p class="italic text-center text-ellipsis overflow-hidden line-clamp-3"> {{ user?.bio }}
+                        </p>
+                    </div>
                 </div>
                 <div class="flex flex-col justify-center w-full h-full">
 
@@ -57,7 +58,7 @@
 import * as Vue from 'vue';
 import BackButtonView from '../components/BackButtonView.vue';
 import ButtonView from '@/components/ButtonView.vue';
-import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon } from '@heroicons/vue/24/outline';
+import { Cog6ToothIcon } from '@heroicons/vue/24/outline';
 import User from '@/scripts/User';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
@@ -95,7 +96,10 @@ export default Vue.defineComponent({
         async loadUser() {
             const res = await API.RequestLogged(ROUTES.USERS.GET(this.urlID));
             if (res.error) {
-                console.error(res.error);
+                console.error(res.message);
+                if (res.status === 404) {
+                    User.Forget();
+                }
             } else {
                 this.user = res.data;
             }

@@ -19,13 +19,26 @@
                         </h2>
                     </div>
                     <div class="flex flex-col space-y-4 p-2 w-full">
-                        <div class="flex space-x-2 min-w-full max-w-full h-fit w-full justify-between items-center">
-                            <p class="whitespace-nowrap"> Pseudo : </p>
-                            <InputView type="text" name="pseudo" :value="User.CurrentUser?.pseudo" class="w-[12em]" />
+                        <div class="flex flex-col space-y-2 min-w-full max-w-full h-fit w-full">
+                            <p class="flex whitespace-nowrap">
+                                <GetText :context="Lang.CreateTranslationContext('settings', 'Bio')" /> :
+                            </p>
+                            <TextAreaView type="text" name="bio" rows="3" :placeholder="bioPaceholder"
+                                :value="User.CurrentUser?.bio" />
                         </div>
                         <div class="flex space-x-2 min-w-full max-w-full h-fit w-full justify-between items-center">
-                            <p class="whitespace-nowrap"> Email : </p>
-                            <InputView type="email" name="email" :value="User.CurrentUser?.email" class="w-[12em]" />
+                            <p class="flex whitespace-nowrap">
+                                <GetText :context="Lang.CreateTranslationContext('settings', 'Pseudo')" /> :
+                            </p>
+                            <InputView type="text" name="pseudo" :placeholder="pseudoPlaceholder"
+                                :value="User.CurrentUser?.pseudo" class="w-[60vw]" />
+                        </div>
+                        <div class="flex space-x-2 min-w-full max-w-full h-fit w-full justify-between items-center">
+                            <p class="flex whitespace-nowrap">
+                                <GetText :context="Lang.CreateTranslationContext('settings', 'Email')" /> :
+                            </p>
+                            <InputView type="email" name="email" :placeholder="emailPlaceholder"
+                                :value="User.CurrentUser?.email" class="w-[60vw]" />
                         </div>
                         <div class="flex justify-between items-center">
                             <span />
@@ -114,6 +127,7 @@ import User from '@/scripts/User';
 import ModalView from '@/components/ModalView.vue';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
+import TextAreaView from '@/components/TextAreaView.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -124,7 +138,8 @@ export default Vue.defineComponent({
         ChevronRightIcon,
         ArrowLeftStartOnRectangleIcon,
         TrashIcon,
-        ModalView
+        ModalView,
+        TextAreaView
     },
     setup() {
         return {
@@ -132,7 +147,10 @@ export default Vue.defineComponent({
             User,
             savable: false,
             languages: Lang.getLanguages(),
-            currentLanguage: Lang.getLanguage()
+            currentLanguage: Lang.getLanguage(),
+            bioPaceholder: '',
+            pseudoPlaceholder: '',
+            emailPlaceholder: ''
         }
     },
     data() {
@@ -141,8 +159,14 @@ export default Vue.defineComponent({
         }
     },
     mounted() {
-        setInterval(() => {
-            this.savable = this.canSaveUser();
+        Lang.GetText(Lang.CreateTranslationContext('settings', 'Bio'), text => this.bioPaceholder = text);
+        Lang.GetText(Lang.CreateTranslationContext('settings', 'Pseudo'), text => this.pseudoPlaceholder = text);
+        Lang.GetText(Lang.CreateTranslationContext('settings', 'Email'), text => this.emailPlaceholder = text);
+
+        const intervalId = setInterval(() => {
+            try {
+                this.savable = this.canSaveUser();
+            } catch (err) { clearInterval(intervalId); }
             this.$forceUpdate();
         }, 500);
     },
@@ -167,18 +191,19 @@ export default Vue.defineComponent({
         canSaveUser() {
             const email = document.querySelector('input[name="email"]') as HTMLInputElement;
             const pseudo = document.querySelector('input[name="pseudo"]') as HTMLInputElement;
-            if (email && email.value && pseudo && pseudo.value) {
-                if ((email.value !== User.CurrentUser?.email || pseudo.value !== User.CurrentUser?.pseudo))
-                    return true;
-            }
-            return false;
+            const bio = document.querySelector('textarea[name="bio"]') as HTMLTextAreaElement;
+
+            const inputsFilled = email && email.value && pseudo && pseudo.value;
+            const inputsModified = email.value !== User.CurrentUser?.email || pseudo.value !== User.CurrentUser?.pseudo || (bio && (bio.value ?? '') !== (User.CurrentUser?.bio ?? ''));
+            return (inputsFilled && inputsModified) ? true : false;
         },
         async saveUser() {
             if (!this.canSaveUser()) return;
             const emailValue = (document.querySelector('input[name="email"]') as HTMLInputElement).value;
             const pseudoValue = (document.querySelector('input[name="pseudo"]') as HTMLInputElement).value;
+            const bioValue = (document.querySelector('textarea[name="bio"]') as HTMLTextAreaElement).value;
 
-            const res = await API.RequestLogged(ROUTES.USERS.ME.UPDATE(pseudoValue, emailValue));
+            const res = await API.RequestLogged(ROUTES.USERS.ME.UPDATE(pseudoValue, emailValue, bioValue));
             if (res.error) {
                 console.error(res.message);
             } else {

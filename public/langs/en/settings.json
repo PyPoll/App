@@ -10,6 +10,9 @@
     "TermsOfService": "Terms of Service",
     "AccountSettings": "Account settings",
     "Actions": "Actions",
+    "Pseudo": "Pseudo",
+    "Email": "Email",
+    "Bio": "Bio",
     "DeleteAccount": "Delete account",
     "Logout": "Log out",
     "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?"

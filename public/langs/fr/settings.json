@@ -12,6 +12,7 @@
     "Actions": "Actions",
     "Pseudo": "Pseudo",
     "Email": "Email",
+    "Bio": "Bio",
     "DeleteAccount": "Supprimer le compte",
     "Logout": "Se déconnecter",
     "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?\nCette action est irréversible."

@@ -70,7 +70,7 @@ export default Vue.defineComponent({
             }, 100);
         });
 
-        this.addPoll();
+        this.addPoll(this.$route.query.pollId ? parseInt(this.$route.query.pollId as string) : undefined);
         this.addPoll();
     },
     methods: {
@@ -86,6 +86,9 @@ export default Vue.defineComponent({
             if (this.polls.length - pollIndex < 2) {
                 this.addPoll();
             }
+
+            // set route ?pollId={id} for sharing
+            this.$router.push({ query: { pollId: this.polls[pollIndex].id } });
         },
         nextPoll() {
             const contentView = this.$refs['contentView'] as HTMLElement;
@@ -95,8 +98,8 @@ export default Vue.defineComponent({
                 behavior: 'smooth'
             });
         },
-        async addPoll() {
-            const res = await API.RequestLogged(ROUTES.POLLS.GET());
+        async addPoll(id?: number) {
+            const res = await API.RequestLogged(ROUTES.POLLS.GET(id));
             if (res.error) {
                 console.error(res.message);
                 return;

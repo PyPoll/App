@@ -8,11 +8,11 @@ export default {
     USERS: {
         GET: (id: number | undefined = undefined) => new Route(`users${id ? `/${id}` : ''}`, METHOD.GET),
         CREATE: (pseudo: string, email: string) => new Route(`users`, METHOD.POST, undefined, { pseudo, email }),
-        UPDATE: (id: number, pseudo: string, email: string) => new Route(`users/${id}`, METHOD.PATCH, undefined, { pseudo, email }),
+        UPDATE: (id: number, pseudo: string | undefined, email: string | undefined = undefined, bio: string | undefined = undefined) => new Route(`users/${id}`, METHOD.PATCH, undefined, { pseudo, email, bio }),
         DELETE: (id: number) => new Route(`users/${id}`, METHOD.DELETE),
         ME: {
             GET: () => new Route(`users/me`, METHOD.GET),
-            UPDATE: (pseudo: string, email: string) => new Route(`users/me`, METHOD.PATCH, undefined, { pseudo, email }),
+            UPDATE: (pseudo: string | undefined, email: string | undefined = undefined, bio: string | undefined = undefined) => new Route(`users/me`, METHOD.PATCH, undefined, { pseudo, email, bio }),
             DELETE: () => new Route(`users/me`, METHOD.DELETE),
         }
     },
