@@ -106,7 +106,7 @@ export default Vue.defineComponent({
             }
 
             const poll = res.data;
-            this.polls.push(poll);
+            if (poll) this.polls.push(poll);
         }
     }
 });

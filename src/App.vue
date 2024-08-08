@@ -62,12 +62,12 @@ export default Vue.defineComponent({
 
         // Check if user is still valid
         if (User.CurrentUser) {
-            API.RequestLogged(ROUTES.USERS.ME.GET()).then(res => {
+            API.RequestLogged(ROUTES.AUTH.TOKEN()).then(res => {
                 if (res.error) {
                     console.error(res.message);
                     User.Forget();
                 } else {
-                    User.CurrentUser?.update(res.data);
+                    User.CurrentUser?.update({ token: res.data });
                 }
             }).catch(console.error);
         }

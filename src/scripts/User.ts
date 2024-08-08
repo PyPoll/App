@@ -43,12 +43,13 @@ class User {
     }
 
     public update(data: any) {
-        this.id = data.id;
-        this.pseudo = data.pseudo;
-        this.bio = data.bio;
-        this.email = data.email;
-        this.nbFollowers = data.nbFollowers;
-        this.nbFollowing = data.nbFollowing;
+        this.id = data.id ?? this.id;
+        this.pseudo = data.pseudo ?? this.pseudo;
+        this.bio = data.bio ?? this.bio;
+        this.email = data.email ?? this.email;
+        this.nbFollowers = data.nbFollowers ?? this.nbFollowers;
+        this.nbFollowing = data.nbFollowing ?? this.nbFollowing;
+        this.token = data.token ?? this.token;
         this.save();
     }
 

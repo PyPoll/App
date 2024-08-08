@@ -154,7 +154,7 @@ export class API {
 
     public static Setup(host: string) {
         API.host = API.SanatizeHost(host);
-        API.protocol = 'https'; window.location.protocol.endsWith(':')
+        API.protocol = window.location.protocol.endsWith(':')
             ? window.location.protocol.substring(0, window.location.protocol.length - 1)
             : window.location.protocol;
     }

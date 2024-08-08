@@ -55,9 +55,16 @@
                                 <p>Work in progress</p>
                             </RegisterButton>
                         </div>
+                        <div v-show="registerMode === 'Unregistered'"
+                            class="flex flex-col h-fit w-full justify-center items-center space-y-4">
+                            <LoadingIcon class="w-8 h-8" />
+                            <p class="text-indigo-400">
+                                <GetText :context="Lang.CreateTranslationContext('verbs', 'LoggingIn')" />
+                            </p>
+                        </div>
                         <div class="flex justify-center items-center"
                             :class="registerMode === undefined ? 'show-up' : 'hide-down'">
-                            <button class="flex p-2">
+                            <button class="flex p-2" @click="continueUnregistered">
                                 <p class="text-indigo-400">
                                     <GetText
                                         :context="Lang.CreateTranslationContext('register', 'ContinueUnregistered')" />
@@ -150,6 +157,7 @@ import BubbleIcon from '@/components/BubbleIcon.vue';
 import RegisterEmailPanel from '@/components/register/RegisterEmailPanel.vue';
 import LoginEmailPanel from '@/components/register/LoginEmailPanel.vue';
 import ModalView from '@/components/ModalView.vue';
+import LoadingIcon from '@/components/LoadingIcon.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -161,7 +169,8 @@ export default Vue.defineComponent({
         BubbleIcon,
         RegisterEmailPanel,
         LoginEmailPanel,
-        ModalView
+        ModalView,
+        LoadingIcon
     },
     setup() {
         return {}
@@ -218,8 +227,19 @@ export default Vue.defineComponent({
                 this.registerMode = undefined;
             else this.registerMode = 'FurWaz';
         },
-        continueUnregistered() {
-            this.$router.push({ name: 'content' });
+        async continueUnregistered() {
+            if (this.registerMode)
+                this.registerMode = undefined;
+            else this.registerMode = 'Unregistered';
+
+            const res = await API.Request(ROUTES.DEVICE.CREATE());
+            if (res.error) {
+                console.error(res.message);
+                return;
+            }
+            const user = new User({ ...res.data.user, token: res.data.token });
+            user.save();
+            this.goToContent();
         },
 
         async registerEmail() {
@@ -250,7 +270,7 @@ export default Vue.defineComponent({
             user.save();
 
             setTimeout(() => {
-                this.$router.push({ name: 'content' });
+                this.goToContent();
             }, 500);
         },
 
@@ -296,6 +316,14 @@ export default Vue.defineComponent({
             new User({ token: res.data }).fetch();
             this.$router.push({ name: 'content' });
             (this.$refs['emailModal'] as any)?.hide();
+        },
+        goToContent() {
+            const redirect = this.$route.query.redirect;
+            if (redirect) {
+                this.$router.push(redirect.toString());
+            } else {
+                this.$router.push({ name: 'content' });
+            }
         }
     }
 });

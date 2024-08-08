@@ -14,6 +14,7 @@
     "Email": "Email",
     "Bio": "Bio",
     "DeleteAccount": "Delete account",
+    "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?",
     "Logout": "Log out",
-    "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?"
+    "LogoutConfirm": "Are you sure you want to log out?\nYou will lose this temporary account."
 }

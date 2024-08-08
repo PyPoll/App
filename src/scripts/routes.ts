@@ -16,6 +16,7 @@ export default {
             DELETE: () => new Route(`users/me`, METHOD.DELETE),
         }
     },
+    DEVICE: { CREATE: () => new Route(`users`, METHOD.POST, undefined, {}) },
     EMAIL: {
         LOGIN: (token: string) => new Route(`email/login`, METHOD.POST, undefined, { token }),
         SENDMAIL: (email: string) => new Route(`email/login`, METHOD.GET, { email }),

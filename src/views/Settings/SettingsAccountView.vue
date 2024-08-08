@@ -107,6 +107,29 @@
                 </div>
             </div>
         </ModalView>
+        <ModalView ref="modal-logout">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-semibold">
+                        <GetText :context="Lang.CreateTranslationContext('settings', 'Logout')" />
+                    </p>
+                </div>
+                <div>
+                    <p class="text-lg text-center">
+                        <GetText :context="Lang.CreateTranslationContext('settings', 'LogoutConfirm')" />
+                    </p>
+                </div>
+                <span class="flex my-2 h-1 w-full card" />
+                <div class="flex h-fit w-full justify-between items-center">
+                    <ButtonView @click="($refs['modal-logout'] as any).hide()" :bg="false">
+                        <GetText :context="Lang.CreateTranslationContext('verbs', 'Cancel')" />
+                    </ButtonView>
+                    <ButtonView @click="sendDeleteRequest">
+                        <GetText :context="Lang.CreateTranslationContext('verbs', 'LogOut')" />
+                    </ButtonView>
+                </div>
+            </div>
+        </ModalView>
     </div>
 </template>
 
@@ -211,7 +234,11 @@ export default Vue.defineComponent({
             }
         },
         logout() {
-            User.Forget();
+            if (User.CurrentUser?.email) {
+                User.Forget();
+            } else {
+                this.$refs['modal-logout'].show();
+            }
         }
     }
 });
