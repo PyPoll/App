@@ -237,7 +237,7 @@ export default Vue.defineComponent({
             if (User.CurrentUser?.email) {
                 User.Forget();
             } else {
-                this.$refs['modal-logout'].show();
+                (this.$refs['modal-logout'] as any).show();
             }
         }
     }
