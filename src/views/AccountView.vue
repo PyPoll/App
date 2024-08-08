@@ -9,7 +9,7 @@
                     <GetText :context="Lang.CreateTranslationContext('account', 'Account')" />
                 </p>
             </div>
-            <div v-if="!viewMode" class="absolute right-0 flex h-full justify-center items-center p-2">
+            <div v-if="urlID >= 0" class="absolute right-0 flex h-full justify-center items-center p-2">
                 <button class="p-2 md:p-3 lg:p-4" @click="$router.push({ name: 'settings' })">
                     <Cog6ToothIcon class="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                 </button>
@@ -80,8 +80,7 @@ export default Vue.defineComponent({
     data() {
         return {
             user: undefined as User | undefined,
-            urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '' + User.CurrentUser?.id),
-            viewMode: window.location.search.includes('id=')
+            urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1')
         }
     },
     mounted() {
@@ -89,12 +88,12 @@ export default Vue.defineComponent({
     },
     computed: {
         ownUser() {
-            return this.user?.id === this.urlID || !this.viewMode;
+            return this.urlID < 0 || this.user?.id === this.urlID;
         }
     },
     methods: {
         async loadUser() {
-            const res = await API.RequestLogged(ROUTES.USERS.GET(this.urlID));
+            const res = await API.RequestLogged(this.ownUser ? ROUTES.USERS.ME.GET() : ROUTES.USERS.GET(this.urlID));
             if (res.error) {
                 console.error(res.message);
                 if (res.status === 404) {
