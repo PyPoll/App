@@ -29,6 +29,15 @@ export default {
         GET: (id: number | undefined = undefined) => new Route(`polls${id ? `/${id}` : ''}`, METHOD.GET),
         DELETE: (id: number) => new Route(`polls/${id}`, METHOD.DELETE),
         MEDIA: (id: number) => new Route(`polls/${id}/media`, METHOD.POST, undefined, undefined, TYPE.FORM),
+        ANSWERS: {
+            CREATE: (pollId: number, answerId: number) => new Route(`polls/${pollId}/answers`, METHOD.POST, undefined, { answerId }),
+            GET: (id: number) => new Route(`polls/${id}/answers`, METHOD.GET),
+            DELETE: (pollId: number, answerId: number) => new Route(`polls/${pollId}/answers/${answerId}`, METHOD.DELETE),
+        },
+        REPORTS: {
+            CREATE: (id: number, reason: string) => new Route(`polls/${id}/reports`, METHOD.POST, undefined, { reason }),
+            GET: (id: number) => new Route(`polls/${id}/reports`, METHOD.GET),
+        },
     },
     MEDIAS: {
         GET: (id: number) => new Route(`medias/${id}`, METHOD.GET),

@@ -52,10 +52,10 @@
                 </div>
             </div>
             <div class="flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
-                <button v-for="(answer, index) in poll.answers.filter(a => a)" :key="answer"
+                <button v-for="answer in poll.answers.filter(a => a)" :key="answer"
                     class="flex w-full rounded-lg p-2 px-3 space-x-2 border-2 bordered transition-all"
-                    :class="selectedAnswers.indexOf(index) >= 0 ? 'bg-indigo-500 border-indigo-500 text-white' : ''"
-                    @click="selectOption(index)">
+                    :class="selectedAnswers.indexOf(answer.id) >= 0 ? 'bg-indigo-500 border-indigo-500 text-white' : ''"
+                    @click="selectOption(answer.id)">
                     <div class="flex font-semibold justify-center items-center h-full">
                         <p> {{ answer.emoji }} </p>
                     </div>
@@ -63,6 +63,12 @@
                         class="flex min-w-0 max-w-full text-base md:text-xl lg:text-2xl font-semibold justify-center items-center h-full">
                         <p class="min-w-0 max-w-full whitespace-nowrap text-ellipsis overflow-hidden">
                             {{ answer.label }}
+                        </p>
+                    </div>
+                    <div v-show="isAnswered" class="flex grow min-w-fit max-h-full justify-end">
+                        <p class="text-base md:text-xl lg:text-2xl font-semibold">
+                            {{ poll.results && poll.results[answer.id] ?
+                                Math.round(poll.results[answer.id] * 100 / poll.results.total) : 0 }} %
                         </p>
                     </div>
                 </button>
@@ -100,7 +106,7 @@ import {
     ShareIcon,
     TrashIcon
 } from '@heroicons/vue/24/outline';
-import { API } from '@/scripts/API';
+import { API, Route } from '@/scripts/API';
 import Lang from '@/scripts/Lang';
 import ROUTES from '@/scripts/routes';
 import { Share } from '@capacitor/share';
@@ -178,8 +184,10 @@ export default Vue.defineComponent({
         }
     },
     mounted() {
+        this.selectedAnswers = this.poll.answered ? this.poll.answered : [];
+
         if (this.poll.medias && this.poll.medias.length) {
-            this.loadMedia()
+            this.loadMedia();
         }
 
         window.addEventListener('mousedown', ev => {
@@ -206,6 +214,8 @@ export default Vue.defineComponent({
                 }
             })
         }
+
+        this.checkForResults();
     },
     watch: {
         poll: {
@@ -217,17 +227,32 @@ export default Vue.defineComponent({
             deep: true
         }
     },
+    computed: {
+        isAnswered() {
+            return this.selectedAnswers.length > 0;
+        }
+    },
     methods: {
-        selectOption(index) {
+        async selectOption(id) {
+            let method: (pollId: number, answerId: number) => Route;
             if (this.poll.type === 'unique') {
-                this.selectedAnswers = [index]
+                this.selectedAnswers = [id];
+                method = ROUTES.POLLS.ANSWERS.CREATE;
             } else {
-                if (this.selectedAnswers.indexOf(index) !== -1) {
-                    this.selectedAnswers = this.selectedAnswers.filter(i => i !== index)
+                if (this.selectedAnswers.indexOf(id) !== -1) {
+                    this.selectedAnswers = this.selectedAnswers.filter(i => i !== id);
+                    method = ROUTES.POLLS.ANSWERS.DELETE;
                 } else {
-                    this.selectedAnswers.push(index)
+                    this.selectedAnswers.push(id);
+                    method = ROUTES.POLLS.ANSWERS.CREATE;
                 }
             }
+
+            const res = await API.RequestLogged(method(this.poll.id, id));
+            if (res.error) {
+                console.error(res.message);
+            }
+            this.checkForResults();
         },
         async loadMedia() {
             this.imgs = new Array(this.poll.medias.length).fill({
@@ -277,6 +302,24 @@ export default Vue.defineComponent({
         reportPoll(type) {
             (this.$refs['reportModal'] as any)?.hide();
             alert("TODO : Report poll (report type is " + type + ")");
+        },
+        async checkForResults() {
+            if (this.isAnswered) {
+                const res = await API.RequestLogged(ROUTES.POLLS.ANSWERS.GET(this.poll.id));
+                if (res.error) {
+                    console.error(res.message);
+                    return;
+                }
+
+                this.poll.results = {};
+                let total = 0;
+                for (const answer of res.data) {
+                    this.poll.results[answer.id] = answer.count;
+                    total += answer.count;
+                }
+                this.poll.results.total = total;
+                this.$forceUpdate();
+            }
         }
     }
 });
