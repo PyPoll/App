@@ -178,7 +178,7 @@ export default Vue.defineComponent({
     data() {
         return {
             Lang,
-            pageMode: this.$route.fullPath.split('/').pop(), // 'register' or 'login'
+            pageMode: this.$route.path.split('/').pop(), // 'register' or 'login'
             registerMode: undefined as string | undefined,
             loginMode: undefined as string | undefined,
             bubbles: [
