@@ -16,38 +16,49 @@
             </div>
         </div>
         <div class="flex flex-col grow h-full w-full">
-            <div class="flex flex-col grow h-full w-full p-4">
-                <div class="flex flex-col justify-center w-full h-fit">
-                    <div class="flex justify-center">
-                        <div class="h-32 w-32 rounded-full bg-white dark:bg-slate-800">
+            <div class="flex flex-col grow h-full w-full p-4 space-y-4">
+                <div class="flex flex-col justify-center w-full h-fit p-2 space-y-2">
+                    <div class="flex justify-center items-center w-full">
+                        <div class="flex justify-center">
+                            <div class="h-24 w-24 rounded-full bg-white dark:bg-slate-800">
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex justify-center pt-2">
-                        <p class="text-2xl font-semibold"> {{ user?.pseudo ?? '- - - - -' }} </p>
-                    </div>
-                    <div class="flex justify-center p-2">
-                        <div class="flex space-x-2">
-                            <p> {{ user?.nbFollowers ?? '--' }} </p>
-                            <p>
-                                <GetText :context="Lang.CreateTranslationContext('account', 'Followers')" />
-                            </p>
-                        </div>
-                        <span class="h-full w-0.5 bg-slate-600 dark:bg-slate-400 mx-4 rounded-full" />
-                        <div class="flex space-x-2">
-                            <p> {{ user?.nbFollowing ?? '--' }} </p>
-                            <p>
-                                <GetText :context="Lang.CreateTranslationContext('account', 'Following')" />
-                            </p>
+                        <div class="flex flex-col w-full justify-center items-start p-4 space-y-2">
+                            <p class="text-2xl font-semibold"> {{ user?.pseudo ?? '- - - - -' }} </p>
+                            <div v-if="!ownUser"
+                                class="flex w-fit max-w-full h-fit max-h-full justify-center items-center">
+                                <button class="flex bordered w-fit h-fit p-1" @click="toggleFollow">
+                                    <CheckIcon v-if="followed" class="w-6 h-6 mx-0.5" />
+                                    <UserPlusIcon v-else class="w-6 h-6 mx-0.5" />
+                                    <p class="mx-2">
+                                        <GetText
+                                            :context="Lang.CreateTranslationContext('account', followed ? 'Followed' : 'Follow')" />
+                                    </p>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="flex justify-center opacity-70">
-                        <p class="italic text-center text-ellipsis overflow-hidden line-clamp-3"> {{ user?.bio }}
+                        <p class="italic text-center text-sm text-ellipsis overflow-hidden line-clamp-2"> {{ user?.bio
+                            }}
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-col justify-center w-full h-full">
-
+                <div class="flex justify-center p-2 w-full h-fit">
+                    <div class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit">
+                        <p class="text-xl font-bold"> {{ user?.nbFollowers ?? '--' }} </p>
+                        <p class="text-base">
+                            <GetText :context="Lang.CreateTranslationContext('account', 'Followers')" />
+                        </p>
+                    </div>
+                    <span class="flex h-full w-0.5 bg-slate-600 dark:bg-slate-400 mx-4 rounded-full" />
+                    <div class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit">
+                        <p class="text-xl font-bold"> {{ user?.nbFollowing ?? '--' }} </p>
+                        <p class="text-base">
+                            <GetText :context="Lang.CreateTranslationContext('account', 'Following')" />
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,7 +69,7 @@
 import * as Vue from 'vue';
 import BackButtonView from '../components/BackButtonView.vue';
 import ButtonView from '@/components/ButtonView.vue';
-import { Cog6ToothIcon } from '@heroicons/vue/24/outline';
+import { CheckIcon, Cog6ToothIcon, UserPlusIcon } from '@heroicons/vue/24/outline';
 import User from '@/scripts/User';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
@@ -70,7 +81,9 @@ export default Vue.defineComponent({
         BackButtonView,
         ButtonView,
         GetText,
-        Cog6ToothIcon
+        Cog6ToothIcon,
+        UserPlusIcon,
+        CheckIcon
     },
     setup() {
         return {
@@ -80,7 +93,8 @@ export default Vue.defineComponent({
     data() {
         return {
             user: undefined as User | undefined,
-            urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1')
+            urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1'),
+            followed: false
         }
     },
     mounted() {
@@ -88,7 +102,7 @@ export default Vue.defineComponent({
     },
     computed: {
         ownUser() {
-            return this.urlID < 0 || this.user?.id === this.urlID;
+            return this.urlID < 0 || this.urlID === User.CurrentUser?.id;
         }
     },
     methods: {
@@ -101,6 +115,7 @@ export default Vue.defineComponent({
                 }
             } else {
                 this.user = res.data;
+                this.followed = res.data.followed;
                 if (this.ownUser) {
                     User.CurrentUser?.update(res.data);
                 }
@@ -108,6 +123,18 @@ export default Vue.defineComponent({
         },
         logout() {
             User.Forget();
+        },
+        async toggleFollow() {
+            if (!this.user) return;
+
+            this.followed = !this.followed;
+            if (this.followed) {
+                await API.RequestLogged(ROUTES.USERS.FOLLOW(this.user.id));
+            } else {
+                await API.RequestLogged(ROUTES.USERS.UNFOLLOW(this.user.id));
+            }
+
+            this.loadUser();
         }
     }
 });
