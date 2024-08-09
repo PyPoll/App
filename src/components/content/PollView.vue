@@ -299,9 +299,14 @@ export default Vue.defineComponent({
         toggleMenu() {
             this.menuOpen = !this.menuOpen;
         },
-        reportPoll(type) {
+        async reportPoll(type) {
             (this.$refs['reportModal'] as any)?.hide();
-            alert("TODO : Report poll (report type is " + type + ")");
+
+            const res = await API.RequestLogged(ROUTES.POLLS.REPORTS.CREATE(this.poll.id, type));
+            if (res.error) {
+                console.error(res.message);
+                return;
+            }
         },
         async checkForResults() {
             if (this.isAnswered) {
