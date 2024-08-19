@@ -9,13 +9,13 @@
                     <GetText :context="Lang.CreateTranslationContext('account', 'Account')" />
                 </p>
             </div>
-            <div v-if="urlID < 0" class="absolute right-0 flex h-full justify-center items-center p-2">
+            <div v-if="editMode" class="absolute right-0 flex h-full justify-center items-center p-2">
                 <button class="p-2 md:p-3 lg:p-4" @click="$router.push({ name: 'settings' })">
                     <Cog6ToothIcon class="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                 </button>
             </div>
         </div>
-        <div class="flex flex-col grow h-full w-full space-y-8">
+        <div class="flex flex-col grow min-h-0 max-h-full h-full w-full space-y-8 overflow-auto">
             <div class="flex flex-col grow h-fit w-full p-4 space-y-4">
                 <div class="flex flex-col justify-center w-full h-fit p-2 space-y-2">
                     <div class="flex justify-center items-center w-full">
@@ -61,13 +61,15 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col h-full w-full">
+            <div v-if="!editMode" class="flex flex-col h-full w-full sticky top-0">
                 <div>
                     <p class="text-xl font-bold text-center p-2">Published polls</p>
                 </div>
                 <div class="flex px-2"><span class="flex bg-slate-500 h-0.5 w-full rounded-full" /></div>
-                <div class="flex flex-col px-4">
-                    <PollView v-if="demopoll" :poll="demopoll" />
+                <div class="flex flex-col px-4 min-h-0 max-h-full h-full overflow-auto">
+                    <div class="h-full w-full overflow-scroll snap-mandatory snap-y no-scrollbar">
+                        <PollView v-for="poll in accountPolls" :key="poll.id" :poll="poll" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,20 +108,21 @@ export default Vue.defineComponent({
             user: undefined as User | undefined,
             urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1'),
             followed: false,
-            demopoll: null
+            accountPolls: [] as any[],
         }
     },
     mounted() {
         this.loadUser();
-        API.RequestLogged(ROUTES.POLLS.GET(4)).then(res => {
-            if (!res.error) {
-                this.demopoll = res.data;
-            }
-        });
+        if (!this.editMode) { // account view mode, not own account
+            this.loadAccountPolls();
+        }
     },
     computed: {
         ownUser() {
-            return this.urlID < 0 || this.urlID === User.CurrentUser?.id;
+            return this.editMode || this.urlID === User.CurrentUser?.id;
+        },
+        editMode() {
+            return this.urlID < 0;
         }
     },
     methods: {
@@ -136,6 +139,14 @@ export default Vue.defineComponent({
                 if (this.ownUser) {
                     User.CurrentUser?.update(res.data);
                 }
+            }
+        },
+        async loadAccountPolls() {
+            const res = await API.RequestLogged(ROUTES.USERS.POLLS(this.urlID));
+            if (res.error) {
+                console.error(res.message);
+            } else {
+                this.accountPolls = res.data;
             }
         },
         logout() {

@@ -10,6 +10,7 @@ export default {
         CREATE: (pseudo: string, email: string) => new Route(`users`, METHOD.POST, undefined, { pseudo, email }),
         UPDATE: (id: number, pseudo: string | undefined, email: string | undefined = undefined, bio: string | undefined = undefined) => new Route(`users/${id}`, METHOD.PATCH, undefined, { pseudo, email, bio }),
         DELETE: (id: number) => new Route(`users/${id}`, METHOD.DELETE),
+        POLLS: (id: number) => new Route(`users/${id}/polls`, METHOD.GET),
         FOLLOW: (id: number) => new Route(`users/${id}/follow`, METHOD.POST),
         UNFOLLOW: (id: number) => new Route(`users/${id}/follow`, METHOD.DELETE),
         ME: {
