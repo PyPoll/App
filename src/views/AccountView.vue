@@ -15,8 +15,8 @@
                 </button>
             </div>
         </div>
-        <div class="flex flex-col grow h-full w-full">
-            <div class="flex flex-col grow h-full w-full p-4 space-y-4">
+        <div class="flex flex-col grow h-full w-full space-y-8">
+            <div class="flex flex-col grow h-fit w-full p-4 space-y-4">
                 <div class="flex flex-col justify-center w-full h-fit p-2 space-y-2">
                     <div class="flex justify-center items-center w-full">
                         <div class="flex justify-center">
@@ -61,6 +61,15 @@
                     </div>
                 </div>
             </div>
+            <div class="flex flex-col h-full w-full">
+                <div>
+                    <p class="text-xl font-bold text-center p-2">Published polls</p>
+                </div>
+                <div class="flex px-2"><span class="flex bg-slate-500 h-0.5 w-full rounded-full" /></div>
+                <div class="flex flex-col px-4">
+                    <PollView v-if="demopoll" :poll="demopoll" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -75,6 +84,7 @@ import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
 import Lang from '@/scripts/Lang';
 import GetText from '@/components/GetText.vue';
+import PollView from '@/components/content/PollView.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -83,7 +93,8 @@ export default Vue.defineComponent({
         GetText,
         Cog6ToothIcon,
         UserPlusIcon,
-        CheckIcon
+        CheckIcon,
+        PollView
     },
     setup() {
         return {
@@ -94,11 +105,17 @@ export default Vue.defineComponent({
         return {
             user: undefined as User | undefined,
             urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1'),
-            followed: false
+            followed: false,
+            demopoll: null
         }
     },
     mounted() {
         this.loadUser();
+        API.RequestLogged(ROUTES.POLLS.GET(4)).then(res => {
+            if (!res.error) {
+                this.demopoll = res.data;
+            }
+        });
     },
     computed: {
         ownUser() {

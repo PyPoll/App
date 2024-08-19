@@ -48,7 +48,10 @@ export default Vue.defineComponent({
     },
     data() {
         return {
-            polls: [] as any[]
+            polls: [] as any[],
+            currentPollIndex: 0,
+            lastPollIndex: 0,
+            lastPollviewTimeMS: new Date().getTime()
         }
     },
     mounted() {
@@ -57,7 +60,7 @@ export default Vue.defineComponent({
         // Prevent the user from scrolling past the next poll
         let scrolling = false;
         let scrollingTimeout: any = null;
-        contentView.addEventListener("scroll", () => {
+        contentView.addEventListener("scroll", ev => {
             if (!scrolling) {
                 scrolling = true;
                 this.onScrollStart();
@@ -81,14 +84,27 @@ export default Vue.defineComponent({
             const contentView = this.$refs['contentView'] as HTMLElement;
             const contentViewHeight = contentView.clientHeight;
             const contentScroll = contentView.scrollTop;
-            const pollIndex = Math.round(contentScroll / contentViewHeight);
+            this.currentPollIndex = Math.round(contentScroll / contentViewHeight);
 
-            if (this.polls.length - pollIndex < 2) {
+            if (this.currentPollIndex !== this.lastPollIndex) {
+                this.lastPollIndex = this.currentPollIndex;
+
+                // check if skipped
+                const currentTimeMS = new Date().getTime();
+                const deltaMS = currentTimeMS - this.lastPollviewTimeMS;
+                this.lastPollviewTimeMS = currentTimeMS;
+
+                if (deltaMS < 2000) { // skipped if less than 2 seconds
+                    API.RequestLogged(ROUTES.STATS.SKIPPED_POLL(this.polls[this.currentPollIndex].id));
+                }
+            }
+
+            if (this.polls.length - this.currentPollIndex < 2) {
                 this.addPoll();
             }
 
             // set route ?pollId={id} for sharing
-            this.$router.push({ query: { pollId: this.polls[pollIndex].id } });
+            this.$router.push({ query: { pollId: this.polls[this.currentPollIndex].id } });
         },
         nextPoll() {
             const contentView = this.$refs['contentView'] as HTMLElement;

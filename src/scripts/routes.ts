@@ -45,5 +45,9 @@ export default {
         GET: (id: number) => new Route(`medias/${id}`, METHOD.GET),
         PREVIEW: (id: number) => new Route(`medias/${id}/preview`, METHOD.GET),
         VIEW: (id: number) => new Route(`medias/${id}/view`, METHOD.GET),
+    },
+    STATS: {
+        SKIPPED_POLL: (pollId: number) => new Route(`stats/skipPoll`, METHOD.POST, undefined, { pollId }),
+        LOOKED_ACCOUNT: (pollId: number) => new Route(`stats/lookAccount`, METHOD.POST, undefined, { pollId }),
     }
 };

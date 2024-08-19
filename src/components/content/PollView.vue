@@ -151,7 +151,8 @@ export default Vue.defineComponent({
                     label: Lang.CreateTranslationContext('poll', 'SeeProfile'),
                     icon: UserIcon,
                     action: () => {
-                        this.$router.push(`/account?id=${this.poll.author.id}`)
+                        API.RequestLogged(ROUTES.STATS.LOOKED_ACCOUNT(this.poll.id));
+                        this.$router.push(`/account?id=${this.poll.author.id}`);
                     }
                 },
                 {
