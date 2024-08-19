@@ -52,24 +52,30 @@
                 </div>
             </div>
             <div class="flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
-                <button v-for="answer in poll.answers.filter(a => a)" :key="answer"
-                    class="flex w-full rounded-lg p-2 px-3 space-x-2 border-2 bordered transition-all"
-                    :class="selectedAnswers.indexOf(answer.id) >= 0 ? 'bg-indigo-500 border-indigo-500 text-white' : ''"
+                <button v-for="answer in poll.answers" :key="answer"
+                    class="relative flex w-full rounded-lg overflow-hidden border-2 rounded-md transition-all"
+                    :class="selectedAnswers.indexOf(answer.id) >= 0 ? 'border-indigo-400 dark:border-indigo-500' : 'border-slate-300 dark:border-slate-600'"
                     @click="selectOption(answer.id)">
-                    <div class="flex font-semibold justify-center items-center h-full">
-                        <p> {{ answer.emoji }} </p>
+                    <div class="absolute h-full rounded-r-md transition-all duration-300 ease-out-expo"
+                        :class="selectedAnswers.indexOf(answer.id) >= 0 ? 'bg-indigo-500/[0.5]' : 'bg-slate-200/[0.5] dark:bg-slate-500/[0.5]'"
+                        :style="`width: ${isAnswered ? getPollAnswerPercent(poll, answer.id).toString() : '0'}%`">
+
                     </div>
-                    <div
-                        class="flex min-w-0 max-w-full text-base md:text-xl lg:text-2xl font-semibold justify-center items-center h-full">
-                        <p class="min-w-0 max-w-full whitespace-nowrap text-ellipsis overflow-hidden">
-                            {{ answer.label }}
-                        </p>
-                    </div>
-                    <div v-show="isAnswered" class="flex grow min-w-fit max-h-full justify-end">
-                        <p class="text-base md:text-xl lg:text-2xl font-semibold">
-                            {{ poll.results && poll.results[answer.id] ?
-                                Math.round(poll.results[answer.id] * 100 / poll.results.total) : 0 }} %
-                        </p>
+                    <div class="z-10 flex p-2 px-3 space-x-2 ">
+                        <div class="flex font-semibold justify-center items-center h-full">
+                            <p> {{ answer.emoji }} </p>
+                        </div>
+                        <div
+                            class="flex min-w-0 max-w-full text-base md:text-xl lg:text-2xl font-semibold justify-center items-center h-full">
+                            <p class="min-w-0 max-w-full whitespace-nowrap text-ellipsis overflow-hidden">
+                                {{ answer.label }}
+                            </p>
+                        </div>
+                        <div v-show="isAnswered" class="flex grow min-w-fit max-h-full justify-end">
+                            <p class="text-base md:text-xl lg:text-2xl font-semibold">
+                                {{ getPollAnswerPercent(poll, answer.id) }} %
+                            </p>
+                        </div>
                     </div>
                 </button>
             </div>
@@ -233,6 +239,9 @@ export default Vue.defineComponent({
         }
     },
     methods: {
+        getPollAnswerPercent(poll, answerId) {
+            return (poll.results && poll.results[answerId]) ? Math.round(poll.results[answerId] * 100 / poll.results.total) : 0;
+        },
         async selectOption(id) {
             let method: (pollId: number, answerId: number) => Route;
             if (this.poll.type === 'unique') {
