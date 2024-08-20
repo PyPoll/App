@@ -1,3 +1,7 @@
 {
-    "Search": "Rechercher"
+    "Search": "Rechercher",
+    "NoResults": "Aucun résultat trouvé :(",
+    "NoResultsDesc": "Aucun résultat trouvé pour votre recherche",
+    "Users": "Utilisateurs",
+    "Polls": "Sondages"
 }

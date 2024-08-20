@@ -1,3 +1,7 @@
 {
-    "Search": "Search"
+    "Search": "Search",
+    "NoResults": "No results found :(",
+    "NoResultsDesc": "No results found for your search",
+    "Users": "Users",
+    "Polls": "Polls"
 }

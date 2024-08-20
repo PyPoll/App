@@ -50,5 +50,6 @@ export default {
     STATS: {
         SKIPPED_POLL: (pollId: number) => new Route(`stats/skipPoll`, METHOD.POST, undefined, { pollId }),
         LOOKED_ACCOUNT: (pollId: number) => new Route(`stats/lookAccount`, METHOD.POST, undefined, { pollId }),
-    }
+    },
+    SEARCH: (query: string) => new Route(`search`, METHOD.GET, { query }),
 };
