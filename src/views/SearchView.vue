@@ -22,20 +22,20 @@
                     </button>
                 </div>
             </div>
-            <div class="flex flex-col min-h-0 max-h-full h-full w-full">
+            <div class="flex flex-col min-h-0 max-h-full h-full w-full space-y-4">
                 <div v-if="results?.users && results.users.length" class="show-up">
-                    <p class="text-xl font-bold text-left">
+                    <p class="text-xl font-bold text-left py-2">
                         <GetText :context="Lang.CreateTranslationContext('search', 'Users')" />
                     </p>
-                    <div class="flex flex-col space-y-2">
+                    <div class="flex flex-col space-y-2 px-2">
                         <UserCard v-for="user in results.users" :key="user.id" :user="user" />
                     </div>
                 </div>
                 <div v-if="results?.polls && results.polls.length" class="show-up">
-                    <p class="text-xl font-bold text-left">
+                    <p class="text-xl font-bold text-left py-2">
                         <GetText :context="Lang.CreateTranslationContext('search', 'Polls')" />
                     </p>
-                    <div class="flex flex-col space-y-2">
+                    <div class="flex flex-col space-y-2 px-2">
                         <PollCard v-for="poll in results.polls" :key="poll.id" :poll="poll" />
                     </div>
                 </div>
