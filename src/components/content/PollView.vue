@@ -61,7 +61,7 @@
                         :style="`width: ${isAnswered ? getPollAnswerPercent(poll, answer.id).toString() : '0'}%`">
 
                     </div>
-                    <div class="z-10 flex p-2 px-3 space-x-2 ">
+                    <div class="flex w-full z-10 flex p-2 px-3 space-x-2 ">
                         <div class="flex font-semibold justify-center items-center h-full">
                             <p> {{ answer.emoji }} </p>
                         </div>
