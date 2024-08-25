@@ -3,5 +3,8 @@
     "NoResults": "No results found :(",
     "NoResultsDesc": "No results found for your search",
     "Users": "Users",
-    "Polls": "Polls"
+    "Polls": "Polls",
+    "Filters": "Filters",
+    "DisplayUsers": "Display users",
+    "DisplayPolls": "Display polls"
 }

@@ -3,5 +3,8 @@
     "NoResults": "Aucun résultat trouvé :(",
     "NoResultsDesc": "Aucun résultat trouvé pour votre recherche",
     "Users": "Utilisateurs",
-    "Polls": "Sondages"
+    "Polls": "Sondages",
+    "Filters": "Filtres",
+    "DisplayUsers": "Afficher les utilisateurs",
+    "DisplayPolls": "Afficher les sondages"
 }
