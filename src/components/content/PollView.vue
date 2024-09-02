@@ -244,6 +244,8 @@ export default Vue.defineComponent({
             return (poll.results && poll.results[answerId]) ? Math.round(poll.results[answerId] * 100 / poll.results.total) : 0;
         },
         async selectOption(id) {
+            if (!this.poll.id) return;
+
             let method: (pollId: number, answerId: number) => Route;
             if (this.poll.type === 'unique') {
                 this.selectedAnswers = [id];
@@ -307,6 +309,7 @@ export default Vue.defineComponent({
             }
         },
         toggleMenu() {
+            if (!this.poll.id) return;
             this.menuOpen = !this.menuOpen;
         },
         async reportPoll(type) {
@@ -319,6 +322,8 @@ export default Vue.defineComponent({
             }
         },
         async checkForResults() {
+            if (!this.poll.id) return;
+
             if (this.isAnswered) {
                 const res = await API.RequestLogged(ROUTES.POLLS.ANSWERS.GET(this.poll.id));
                 if (res.error) {
