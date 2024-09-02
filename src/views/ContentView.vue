@@ -2,6 +2,24 @@
     <div class="flex flex-col w-full h-full space-y-2 p-2 md:p-3 lg:p-4">
         <div ref="contentView" class="show-down h-full w-full overflow-scroll snap-mandatory snap-y no-scrollbar">
             <PollView v-for="(poll, index) in polls" :key="index" :poll="poll" />
+            <div v-if="polls.length <= 0 && !error"
+                class="show-up flex flex-col h-full w-full space-y-4 justify-center items-center">
+                <p class="text-center text-2xl font-semibold">
+                    <GetText :context="Lang.CreateTranslationContext('poll', 'LoadingPolls')" />
+                </p>
+                <div>
+                    <LoadingIcon class="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12" />
+                </div>
+            </div>
+            <div v-if="polls.length <= 0 && error"
+                class="show-up flex flex-col h-full w-full space-y-4 justify-center items-center">
+                <p class="text-center text-2xl font-semibold">
+                    <GetText :context="Lang.CreateTranslationContext('poll', 'NoPolls')" />
+                </p>
+                <p class="text-center">
+                    <GetText :context="Lang.CreateTranslationContext('poll', 'NoPollsDesc')" />
+                </p>
+            </div>
         </div>
         <div class="show-up flex h-fit w-full min-h-0 max-h-full pb-1 md:pb-2 lg:pb-3">
             <div class="flex h-fit w-full justify-between items-center px-2 py-1 md:px-3 md:py-2 lg:px-4 lg:py-3">
@@ -34,6 +52,9 @@ import {
 } from '@heroicons/vue/24/outline';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
+import GetText from '@/components/GetText.vue';
+import Lang from '@/scripts/Lang';
+import LoadingIcon from '@/components/LoadingIcon.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -41,13 +62,17 @@ export default Vue.defineComponent({
         DashButtonView,
         UserIcon,
         MagnifyingGlassIcon,
-        PlusIcon
+        PlusIcon,
+        GetText,
+        LoadingIcon
     },
     setup() {
         return {}
     },
     data() {
         return {
+            Lang,
+            error: false,
             polls: [] as any[],
             currentPollIndex: 0,
             lastPollIndex: 0,
@@ -115,14 +140,26 @@ export default Vue.defineComponent({
             });
         },
         async addPoll(id?: number) {
-            const res = await API.RequestLogged(ROUTES.POLLS.GET(id));
-            if (res.error) {
-                console.error(res.message);
+            try {
+                const res = await API.RequestLogged(ROUTES.POLLS.GET(id));
+                if (res.error) {
+                    console.error(res.message);
+                    this.error = true;
+                    return;
+                }
+
+                const poll = res.data;
+                if (poll) {
+                    this.polls.push(poll);
+                    this.error = false;
+                } else {
+                    this.error = true;
+                }
+            } catch (err) {
+                console.error(err);
+                this.error = true;
                 return;
             }
-
-            const poll = res.data;
-            if (poll) this.polls.push(poll);
         }
     }
 });

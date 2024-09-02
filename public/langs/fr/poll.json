@@ -9,5 +9,8 @@
     "Hate": "Haine",
     "FakeNews": "Fausses informations",
     "Spam": "Spam",
-    "Other": "Autre"
+    "Other": "Autre",
+    "NoPolls": "Oh, oh .... Pas de sondage 😶",
+    "NoPollsDesc": "Imposible de récupérer les sondages.\nEst-tu connecté à internet ?",
+    "LoadingPolls": "Chargement des sondages..."
 }

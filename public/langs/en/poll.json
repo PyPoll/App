@@ -9,5 +9,8 @@
     "Hate": "Hate",
     "FakeNews": "Fake news",
     "Spam": "Spam",
-    "Other": "Other"
+    "Other": "Other",
+    "NoPolls": "Oh, oh .... No polls 😶",
+    "NoPollsDesc": "Impossible to retrieve polls.\nAre you connected to the internet?",
+    "LoadingPolls": "Loading polls..."
 }
