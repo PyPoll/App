@@ -61,8 +61,8 @@ export default Vue.defineComponent({
         this.loading = false;
         this.done = true;
 
-        // old : setTimeout for 500ms, but now redirect immediately
-        this.$router.push({ name: 'content' });
+        // old : setTimeout for 500ms, but now redirect immediately (not using router to force refresh)
+        window.location.href = '/';
     }
 });
 </script>

@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="!editMode" class="flex flex-col h-full w-full sticky top-0">
+            <div class="flex flex-col h-full w-full sticky top-0">
                 <div>
                     <p class="text-xl font-bold text-center p-2">
                         <GetText :context="Lang.CreateTranslationContext('account', 'Polls')" />
