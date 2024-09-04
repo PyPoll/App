@@ -31,6 +31,10 @@ router.beforeEach((to, from, next) => {
         next({ name: 'register', query: { redirect: to.fullPath } });
         return;
     }
+    if (connected && routeBypassed) {
+        next({ name: 'content', query: { redirect: to.fullPath } });
+        return;
+    }
     next();
 });
 
