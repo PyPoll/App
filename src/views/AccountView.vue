@@ -63,7 +63,9 @@
             </div>
             <div v-if="!editMode" class="flex flex-col h-full w-full sticky top-0">
                 <div>
-                    <p class="text-xl font-bold text-center p-2">Published polls</p>
+                    <p class="text-xl font-bold text-center p-2">
+                        <GetText :context="Lang.CreateTranslationContext('account', 'Polls')" />
+                    </p>
                 </div>
                 <div class="flex px-2"><span class="flex bg-slate-500 h-0.5 w-full rounded-full" /></div>
                 <div class="flex flex-col px-4 min-h-0 max-h-full h-full overflow-auto">

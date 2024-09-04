@@ -164,8 +164,7 @@ export default Vue.defineComponent({
                     label: Lang.CreateTranslationContext('poll', 'Share'),
                     icon: ShareIcon,
                     action: async () => {
-                        const pollPath = window.location.href.substring(window.location.hostname.length + window.location.protocol.length + 2);
-                        const pollUrl = 'https://app.pypoll.com' + pollPath;
+                        const pollUrl = 'https://app.pypoll.com?pollId=' + this.poll.id;
                         if ((await Share.canShare()).value) {
                             try {
                                 await Share.share({
