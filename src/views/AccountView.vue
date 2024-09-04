@@ -89,6 +89,7 @@ import ROUTES from '@/scripts/routes';
 import Lang from '@/scripts/Lang';
 import GetText from '@/components/GetText.vue';
 import PollView from '@/components/content/PollView.vue';
+import { Toast } from '@capacitor/toast';
 
 export default Vue.defineComponent({
     components: {
@@ -115,9 +116,7 @@ export default Vue.defineComponent({
     },
     mounted() {
         this.loadUser();
-        if (!this.editMode) { // account view mode, not own account
-            this.loadAccountPolls();
-        }
+        this.loadAccountPolls();
     },
     computed: {
         ownUser() {
@@ -144,7 +143,9 @@ export default Vue.defineComponent({
             }
         },
         async loadAccountPolls() {
-            const res = await API.RequestLogged(ROUTES.USERS.POLLS(this.urlID));
+            if (!User.CurrentUser) return;
+
+            const res = await API.RequestLogged(ROUTES.USERS.POLLS((this.urlID >= 0) ? this.urlID : User.CurrentUser.id));
             if (res.error) {
                 console.error(res.message);
             } else {
