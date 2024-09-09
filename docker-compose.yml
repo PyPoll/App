@@ -1,9 +1,9 @@
-name: pypoll-website
+name: pypoll-app
 services:
   web:
     build: .
     ports:
-      - 5000:80
+      - 5002:80
     restart: unless-stopped
     environment:
       VITE_API_URL: https://api.pypoll.com
