@@ -1,7 +1,7 @@
 <template>
     <div class="flex h-full w-full snap-start justify-center items-center my-4">
-        <div
-            class="flex flex-col h-fit min-h-0 max-h-full w-full p-4 md:p-5 lg:p-6 space-y-8 md:space-y-10 lg:space-y-12 justify-between rounded-xl my-2 shadow-lg border-2 border-slate-200 dark:border-slate-600">
+        <div v-if="poll" class="flex flex-col h-fit min-h-0 max-h-full w-full p-4 md:p-5 lg:p-6 space-y-8 md:space-y-10 lg:space-y-12 justify-between rounded-xl my-2 
+                shadow-lg border border-slate-200 dark:border-slate-800/[0.5] bg-slate-50 dark:bg-slate-700">
             <div class="flex space-x-4">
                 <div class="flex justify-center items-center">
                     <div class="rounded-md bg-slate-200 dark:bg-slate-600 w-8 h-8 md:w-10 md:h-10" />
@@ -80,6 +80,19 @@
                 </button>
             </div>
         </div>
+        <div v-else class="space-y-4 px-4">
+            <p class="text-center text-2xl font-semibold">
+                <GetText :context="Lang.CreateTranslationContext('poll', 'NoMorePolls')" />
+            </p>
+            <div class="space-y-2">
+                <p class="text-center text-md">
+                    <GetText :context="Lang.CreateTranslationContext('poll', 'NoMorePollsDesc')" />
+                </p>
+                <p class="text-center text-md">
+                    <GetText :context="Lang.CreateTranslationContext('poll', 'NoMorePollsDesc2')" />
+                </p>
+            </div>
+        </div>
         <ModalView ref="reportModal">
             <div class="flex flex-col justify-center items-center space-y-4">
                 <div class="flex space-x-4 justify-center items-center pb-4">
@@ -133,7 +146,8 @@ export default Vue.defineComponent({
     props: {
         poll: {
             type: Object,
-            required: true
+            required: false,
+            default: null
         }
     },
     setup() {
@@ -190,6 +204,8 @@ export default Vue.defineComponent({
         }
     },
     mounted() {
+        if (!this.poll) return;
+
         this.selectedAnswers = this.poll.answered ? this.poll.answered : [];
 
         if (this.poll.medias && this.poll.medias.length) {
@@ -323,22 +339,22 @@ export default Vue.defineComponent({
         async checkForResults() {
             if (!this.poll.id) return;
 
-            if (this.isAnswered) {
-                const res = await API.RequestLogged(ROUTES.POLLS.ANSWERS.GET(this.poll.id));
-                if (res.error) {
-                    console.error(res.message);
-                    return;
-                }
-
-                this.poll.results = {};
-                let total = 0;
-                for (const answer of res.data) {
-                    this.poll.results[answer.id] = answer.count;
-                    total += answer.count;
-                }
-                this.poll.results.total = total;
-                this.$forceUpdate();
+            const res = await API.RequestLogged(ROUTES.POLLS.ANSWERS.GET(this.poll.id));
+            if (res.error) {
+                console.error(res.message);
+                return;
             }
+
+            this.selectedAnswers = res.data.answered;
+
+            this.poll.results = {};
+            let total = 0;
+            for (const answer of res.data.answers) {
+                this.poll.results[answer.id] = answer.count;
+                total += answer.count;
+            }
+            this.poll.results.total = total;
+            this.$forceUpdate();
         }
     }
 });

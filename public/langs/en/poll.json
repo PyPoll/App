@@ -12,5 +12,8 @@
     "Other": "Other",
     "NoPolls": "Oh, oh .... No polls 😶",
     "NoPollsDesc": "Impossible to retrieve polls.\nAre you connected to the internet?",
-    "LoadingPolls": "Loading polls..."
+    "LoadingPolls": "Loading polls...",
+    "NoMorePolls": "No more polls to show 🫣",
+    "NoMorePollsDesc": "You have seen all the polls available",
+    "NoMorePollsDesc2": "Come back later to see new polls !"
 }

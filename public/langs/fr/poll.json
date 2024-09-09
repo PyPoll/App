@@ -12,5 +12,8 @@
     "Other": "Autre",
     "NoPolls": "Oh, oh .... Pas de sondage 😶",
     "NoPollsDesc": "Imposible de récupérer les sondages.\nEst-tu connecté à internet ?",
-    "LoadingPolls": "Chargement des sondages..."
+    "LoadingPolls": "Chargement des sondages...",
+    "NoMorePolls": "Plus de sondages à afficher 🫣",
+    "NoMorePollsDesc": "Tu as vu tous les sondages disponibles",
+    "NoMorePollsDesc2": "Reviens plus tard pour voir de nouveaux sondages !"
 }
