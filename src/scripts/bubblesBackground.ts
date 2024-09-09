@@ -41,6 +41,11 @@ export function setup(canvashtml: HTMLCanvasElement) {
     for (let i = 6; i >= 0; i--) {
         addBubble();
     }
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 }
 
 function render() {
