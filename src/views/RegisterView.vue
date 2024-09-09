@@ -40,9 +40,27 @@
                             <RegisterButton :data="{ name: 'Email' }" :selected="registerMode === 'Email'"
                                 :display="!registerMode || registerMode === 'Email'"
                                 @click="registerMode = registerMode ? undefined : 'Email'">
-                                <RegisterEmailPanel ref="registerEmailPanel" :onRegister="registerEmail"
-                                    class="text-slate-700 dark:text-slate-200"
-                                    :onCancel="() => registerMode = undefined" />
+                                <div class="flex flex-col flex-col h-fit w-full max-w-full max-h-full space-y-4">
+                                    <div class="flex flex-col space-y-4 px-2">
+                                        <div class="flex flex-col justify-center items-start">
+                                            <p> Pseudo </p>
+                                            <InputView type="text" name="register-pseudo" />
+                                        </div>
+                                        <div class="flex flex-col justify-center items-start">
+                                            <p> Email </p>
+                                            <InputView type="email" name="register-email" />
+                                        </div>
+                                        <LogZone ref="registerEmailLogZone" />
+                                    </div>
+                                    <div class="flex justify-between items-center pt-1">
+                                        <ButtonView :bg="false" :click="() => registerMode = undefined">
+                                            <p> Annuler </p>
+                                        </ButtonView>
+                                        <ButtonView :bg="true" :click="registerEmail">
+                                            <p> Valider </p>
+                                        </ButtonView>
+                                    </div>
+                                </div>
                             </RegisterButton>
                             <RegisterButton :data="{ name: 'Google' }" :selected="registerMode === 'Google'"
                                 :display="!registerMode || registerMode === 'Google'"
@@ -79,9 +97,23 @@
                             <RegisterButton :loginMode="true" :data="{ name: 'Email' }"
                                 :selected="loginMode === 'Email'" :display="!loginMode || loginMode === 'Email'"
                                 @click="loginMode = loginMode ? undefined : 'Email'">
-                                <LoginEmailPanel ref="loginEmailPanel" :onLogin="loginEmail"
-                                    class="text-slate-700 dark:text-slate-200"
-                                    :onCancel="() => loginMode = undefined" />
+                                <div class="flex flex-col flex-col h-fit w-full max-w-full max-h-full space-y-4">
+                                    <div class="flex flex-col space-y-4 px-2">
+                                        <div class="flex flex-col justify-center items-start">
+                                            <p> Email </p>
+                                            <InputView type="email" name="login-email" autocomplete="email" />
+                                        </div>
+                                        <LogZone ref="loginEmailLogZone" />
+                                    </div>
+                                    <div class="flex justify-between items-center pt-1">
+                                        <ButtonView :bg="false" :click="() => loginMode = undefined">
+                                            <p> Annuler </p>
+                                        </ButtonView>
+                                        <ButtonView :bg="true" :click="loginEmail">
+                                            <p> Valider </p>
+                                        </ButtonView>
+                                    </div>
+                                </div>
                             </RegisterButton>
                             <RegisterButton :loginMode="true" :data="{ name: 'Google' }"
                                 :selected="loginMode === 'Google'" :display="!loginMode || loginMode === 'Google'"
@@ -154,10 +186,12 @@ import {
     ArrowLeftIcon
 } from '@heroicons/vue/24/outline';
 import BubbleIcon from '@/components/BubbleIcon.vue';
-import RegisterEmailPanel from '@/components/register/RegisterEmailPanel.vue';
-import LoginEmailPanel from '@/components/register/LoginEmailPanel.vue';
 import ModalView from '@/components/ModalView.vue';
 import LoadingIcon from '@/components/LoadingIcon.vue';
+import InputView from '@/components/InputView.vue';
+import ButtonView from '@/components/ButtonView.vue';
+import LogZone from '@/components/LogZone.vue';
+import { Log } from '@/scripts/Logs';
 
 export default Vue.defineComponent({
     components: {
@@ -167,10 +201,11 @@ export default Vue.defineComponent({
         PypollIcon,
         RegisterButton,
         BubbleIcon,
-        RegisterEmailPanel,
-        LoginEmailPanel,
         ModalView,
-        LoadingIcon
+        LoadingIcon,
+        InputView,
+        ButtonView,
+        LogZone
     },
     setup() {
         return {}
@@ -243,16 +278,23 @@ export default Vue.defineComponent({
         },
 
         async registerEmail() {
-            const registerEmailPanel = this.$refs['registerEmailPanel'] as any;
+            const logZone = this.$refs['registerEmailLogZone'] as any;
+            const log = logZone.log(await Lang.TranslateAsync(Lang.CreateTranslationContext('verbs', 'Registering')));
+
             const inputs = {
-                pseudo: (registerEmailPanel.$el.querySelector('input[name="pseudo"]') as HTMLInputElement),
-                email: (registerEmailPanel.$el.querySelector('input[name="email"]') as HTMLInputElement)
+                pseudo: (this.$el.querySelector('input[name="register-pseudo"]') as HTMLInputElement),
+                email: (this.$el.querySelector('input[name="register-email"]') as HTMLInputElement)
             };
 
             for (const key in inputs) {
                 if (!inputs[key].value) {
                     inputs[key].focus();
                     console.error('Missing field:', key);
+                    log.update(
+                        await Lang.GetTextAsync(Lang.CreateTranslationContext('register', 'MissingField', { field: key })),
+                        Log.WARNING
+                    );
+                    setTimeout(() => { log.delete(); }, 4000);
                     return;
                 }
             }
@@ -263,6 +305,10 @@ export default Vue.defineComponent({
             ));
             if (res.error) {
                 console.error(res.message);
+                log.update(
+                    res.message,
+                    Log.ERROR
+                );
                 return;
             }
 
@@ -275,15 +321,22 @@ export default Vue.defineComponent({
         },
 
         async loginEmail() {
-            const loginEmailPanel = this.$refs['loginEmailPanel'] as any;
+            const logZone = this.$refs['loginEmailLogZone'] as any;
+            const log = logZone.log(await Lang.TranslateAsync(Lang.CreateTranslationContext('verbs', 'LoggingIn')));
+
             const inputs = {
-                email: (loginEmailPanel.$el.querySelector('input[name="email"]') as HTMLInputElement)
+                email: (this.$el.querySelector('input[name="login-email"]') as HTMLInputElement)
             };
 
             for (const key in inputs) {
                 if (!inputs[key].value) {
                     inputs[key].focus();
                     console.error('Missing field:', key);
+                    log.update(
+                        await Lang.GetTextAsync(Lang.CreateTranslationContext('register', 'MissingField', { field: key })),
+                        Log.WARNING
+                    );
+                    setTimeout(() => { log.delete(); }, 4000);
                     return;
                 }
             }
@@ -293,6 +346,11 @@ export default Vue.defineComponent({
             ));
             if (res.error) {
                 console.error(res.message);
+                log.update(
+                    res.message,
+                    Log.ERROR
+                );
+                setTimeout(() => { log.delete(); }, 4000);
                 return;
             }
 

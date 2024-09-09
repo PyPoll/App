@@ -6,5 +6,6 @@
     "Pseudo": "Pseudo",
     "Email": "Email",
     "Password": "Password",
-    "PasswordConfirm": "Password confirmation"
+    "PasswordConfirm": "Password confirmation",
+    "MissingField": "Please fill the field {field}"
 }

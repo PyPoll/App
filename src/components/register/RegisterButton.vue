@@ -80,7 +80,12 @@ export default defineComponent({
     methods: {
         hide() {
             const parent = this.$refs.parent as HTMLElement;
-            parent.style.maxHeight = '0px';
+            const button = parent.firstElementChild as HTMLElement;
+            const height = button.getBoundingClientRect().height;
+            parent.style.maxHeight = height + 'px';
+            setTimeout(() => {
+                parent.style.maxHeight = '0px';
+            }, 50);
         },
         show() {
             const parent = this.$refs.parent as HTMLElement;
@@ -94,13 +99,12 @@ export default defineComponent({
             const height = div.getBoundingClientRect().height;
             content.style.maxHeight = height + 'px';
 
-            const parent = this.$refs.parent as HTMLElement;
-            const button = parent.firstElementChild as HTMLElement;
-            parent.style.maxHeight = 'fit-content';
             setTimeout(() => {
-                const height = button.getBoundingClientRect().height;
-                parent.style.maxHeight = height + 'px';
-            }, 500);
+                content.style.maxHeight = 'fit-content';
+            }, 200);
+
+            const parent = this.$refs.parent as HTMLElement;
+            parent.style.maxHeight = 'fit-content';
         },
         unselect() {
             const content = this.$refs.content as HTMLElement;
