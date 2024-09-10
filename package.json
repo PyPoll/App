@@ -25,6 +25,7 @@
     "@capacitor/toast": "^6.0.0",
     "@heroicons/vue": "^2.1.4",
     "plugin": "^0.3.3",
+    "unicode-emoji-picker": "^1.4.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

@@ -22,7 +22,18 @@
     "AnswerTemplate4": "I don't know :/",
     "AnswerTemplate5": "I don't care >:(",
     "SelectEmoji": "Select an emoji",
+    "SearchEmoji": "Search an emoji ...",
     "UploadingPoll": "Uploading poll...",
     "CompressingMedia": "Compressing media...",
-    "UploadingMedia": "Uploading media {index} / {total}..."
+    "UploadingMedia": "Uploading media {index} / {total}...",
+    "Emoji.search": "Search an Emoji",
+    "Emoji.face-emotion": "Smileys & Emotion",
+    "Emoji.food-drink": "Food & Drink",
+    "Emoji.animals-nature": "Nature & Animals",
+    "Emoji.activities-events": "Activities & Events",
+    "Emoji.person-people": "People",
+    "Emoji.travel-places": "Travel & Places",
+    "Emoji.objects": "Clothing & Objects",
+    "Emoji.symbols": "Symbols",
+    "Emoji.flags": "Flags"
 }

@@ -132,6 +132,9 @@ export default defineComponent({
 
         Lang.GetText(Lang.CreateTranslationContext('create', 'TitlePlaceholder'), text => this.titlePlaceholder = text);
         Lang.GetText(Lang.CreateTranslationContext('create', 'DescriptionPlaceholder'), text => this.descriptionPlaceholder = text);
+
+        const tagNameInput = document.querySelector('input[name="tagname"]') as HTMLInputElement;
+        tagNameInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { this.createNewTag(); } });
     },
     watch: {
         title() {

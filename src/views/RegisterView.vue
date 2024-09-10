@@ -238,6 +238,14 @@ export default Vue.defineComponent({
             titleZone.style.height = '33%';
             registerZone.style.height = '67%';
         }, 10);
+
+        const registerEmailPseudo = this.$el.querySelector('input[name="register-pseudo"]') as HTMLInputElement;
+        const registerEmailEmail = this.$el.querySelector('input[name="register-email"]') as HTMLInputElement;
+        registerEmailPseudo.addEventListener('keydown', (e) => { if (e.key === 'Enter') { registerEmailEmail.focus(); } });
+        registerEmailEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') { this.registerEmail(); } });
+
+        const loginEmailEmail = this.$el.querySelector('input[name="login-email"]') as HTMLInputElement;
+        loginEmailEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') { this.loginEmail(); } });
     },
     watch: {
         $route(to, from) {

@@ -22,7 +22,18 @@
     "AnswerTemplate4": "Je ne sais pas :/",
     "AnswerTemplate5": "Je m'en fiche >:(",
     "SelectEmoji": "Sélectionne un emoji",
+    "SearchEmoji": "Rechercher un emoji ...",
     "UploadingPoll": "Envoi du sondage ...",
     "CompressingMedia": "Compression des médias ...",
-    "UploadingMedia": "Envoi du média {index} / {total} ..."
+    "UploadingMedia": "Envoi du média {index} / {total} ...",
+    "Emoji.search": "Rechercher un Emoji",
+    "Emoji.face-emotion": "Smileys & Emotions",
+    "Emoji.food-drink": "Nourriture & Boissons",
+    "Emoji.animals-nature": "Nature & Animaux",
+    "Emoji.activities-events": "Activités & Événements",
+    "Emoji.person-people": "Personnes",
+    "Emoji.travel-places": "Voyages & Lieux",
+    "Emoji.objects": "Vêtements & Objets",
+    "Emoji.symbols": "Symboles",
+    "Emoji.flags": "Drapeaux"
 }

@@ -63,11 +63,7 @@
                     </p>
                 </div>
                 <div class="flex grow h-full w-full p-2 flex-wrap justify-evenly">
-                    <div v-for="emoji in emojis" :key="emoji" class="w-fit h-fit m-2">
-                        <button @click="setAnswerEmoji(emoji)">
-                            <span class="text-2xl">{{ emoji }}</span>
-                        </button>
-                    </div>
+                    <unicode-emoji-picker class="min-w-0 max-w-full "></unicode-emoji-picker>
                 </div>
             </div>
         </ModalView>
@@ -81,6 +77,7 @@ import Lang from '@/scripts/Lang';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { defineComponent } from 'vue';
 import GetText from '@/components/GetText.vue';
+import 'unicode-emoji-picker';
 
 interface Answer {
     emoji: string;
@@ -109,7 +106,6 @@ export default defineComponent({
                 { value: 'multiple', label: 'MultipleChoice' }
             ],
             answers: [] as Answer[],
-            emojis: ['🍇', '🍈', '🍉', '🍊', '🍋', '🍌', '🍍', '🥭', '🍎', '🍏', '🍐', '🍑'],
             nbAnswersTotal: 4,
             answerEmojiModal: null as typeof ModalView | null,
             targetAnswerIndex: -1
@@ -118,6 +114,8 @@ export default defineComponent({
     mounted() {
         this.answerEmojiModal = this.$refs['answerEmojiModal'] as typeof ModalView;
         for (const i in [1, 2]) this.addAnswer(); // add 2 answers by default
+
+        this.configEmojiPicker();
     },
     watch: {
         answerType() {
@@ -132,7 +130,7 @@ export default defineComponent({
             this.poll.answers = this.answers;
         },
         getRandomEmoji() {
-            return this.emojis[Math.floor(Math.random() * this.emojis.length)];
+            return String.fromCodePoint(0x1F600 + Math.floor(Math.random() * 30));
         },
         async getRandomAnswer() {
             const answers = [
@@ -157,6 +155,60 @@ export default defineComponent({
             if (this.targetAnswerIndex < 0) return;
             this.answers[this.targetAnswerIndex]!.emoji = emoji;
             this.answerEmojiModal?.hide();
+        },
+        async configEmojiPicker() {
+            const emojiPicker = document.querySelector('unicode-emoji-picker') as any;
+
+            emojiPicker.addEventListener('emoji-pick', (event) => {
+                console.log("emoji-pick", event.detail.emoji);
+                this.setAnswerEmoji(event.detail.emoji);
+            });
+
+            window.customElements.whenDefined('unicode-emoji-picker').then(async () => {
+                emojiPicker.setTranslation({
+                    'search': {
+                        emoji: '🔎',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.search')),
+                        inputPlaceholder: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'SearchEmoji')),
+                    },
+                    'face-emotion': {
+                        emoji: '😀️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.face-emotion')),
+                    },
+                    'food-drink': {
+                        emoji: '🥕️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.food-drink')),
+                    },
+                    'animals-nature': {
+                        emoji: '🦜️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.animals-nature')),
+                    },
+                    'activities-events': {
+                        emoji: '♟️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.activities-events')),
+                    },
+                    'person-people': {
+                        emoji: '🧍',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.person-people')),
+                    },
+                    'travel-places': {
+                        emoji: '✈️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.travel-places')),
+                    },
+                    'objects': {
+                        emoji: '👒',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.objects')),
+                    },
+                    'symbols': {
+                        emoji: '💬️',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.symbols')),
+                    },
+                    'flags': {
+                        emoji: '🚩',
+                        title: await Lang.GetTextAsync(Lang.CreateTranslationContext('create', 'Emoji.flags')),
+                    }
+                });
+            });
         }
     }
 });
