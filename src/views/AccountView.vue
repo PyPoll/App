@@ -78,14 +78,16 @@
             </div>
         </div>
         <ModalView ref="users-popup">
-            <div class="flex flex-col justify-center items-center space-y-4">
+            <div class="flex flex-col justify-center items-center space-y-4 min-h-0 max-h-full">
                 <div class="flex justify-center items-center">
                     <p class="text-xl font-semibold">
                         {{ popupTitle }}
                     </p>
                 </div>
-                <div class="flex overflow-auto">
-                    <UserCard :user="user" v-for="user in popupUsers" :key="user.pseudo" />
+                <div class="flex overflow-y-auto h-full w-full">
+                    <div class="flex flex-col space-y-4 min-w-0 max-w-full">
+                        <UserCard :user="user" v-for="user in popupUsers" :key="user.pseudo" />
+                    </div>
                     <div v-show="!popupUsers.length">
                         <p class="text-center text-md font-base">
                             <GetText :context="Lang.CreateTranslationContext('account', 'NoUsers')" />
