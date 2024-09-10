@@ -178,7 +178,9 @@ export default defineComponent({
             }
             return medias;
         },
-        async compressMedia(media: any) {
+        async compressMedia(media: any, compressionLevel = 0.6) {
+            const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2MB
+
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -190,15 +192,19 @@ export default defineComponent({
                             reject('Could not compress media');
                             return;
                         }
-                        const maxSize = 2048;
+                        const maxSize = 1024;
                         const imgRatio = img.width / img.height;
                         canvas.width = imgRatio > 1 ? maxSize : maxSize * imgRatio;
                         canvas.height = imgRatio > 1 ? maxSize / imgRatio : maxSize;
                         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
                         canvas.toBlob((blob) => {
                             const newFile = new File([blob as Blob], media.name, { type: 'image/jpeg' });
+                            if (newFile.size > MAX_FILE_SIZE) {
+                                resolve(this.compressMedia(newFile, compressionLevel - 0.1));
+                                return;
+                            }
                             resolve(newFile);
-                        }, 'image/jpeg', 0.6);
+                        }, 'image/jpeg', compressionLevel);
                     };
                     img.src = e.target?.result as string;
                 };
