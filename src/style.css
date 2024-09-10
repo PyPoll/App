@@ -146,9 +146,28 @@ body, head, html {
 unicode-emoji-picker {
     font-size: 1.25em;
     --outer-padding: 0em;
+    --fill-color: #f8fafc;
+    --text-color: #334155;
+    --box-shadow: 0;
+    --filters-border-color: #cbd5e1;
+    --filter-fill-color-hover: #e2e8f0;
+    --content-scrollbar-thumb-fill-color: #e2e8f0;
+    --content-scrollbar-thumb-fill-color-hover: #cbd5e1;
+    --filter-active-marker-border-color: #e2e8f0;
+    --title-bar-fill-color: #f8fafc;
+    --search-input-border-color: #e2e8f0;
+    --search-input-border-color-hover: #cbd5e1;
+    --emoji-border-color-hover: #e2e8f0;
+    --variations-backdrop-fill-color: #f8fafc;
+    --emoji-variation-marker-border-color: #e2e8f0;
+    --emoji-variation-marker-border-color-hover: #cbd5e1;
+    --title-bar-font-size: 1.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+unicode-emoji-picker {
     --fill-color: #334155;
     --text-color: #f8fafc;
-    --box-shadow: 0;
     --filters-border-color: #1e293b;
     --filter-fill-color-hover: #475569;
     --content-scrollbar-thumb-fill-color: #475569;
@@ -161,6 +180,5 @@ unicode-emoji-picker {
     --variations-backdrop-fill-color: #334155;
     --emoji-variation-marker-border-color: #475569;
     --emoji-variation-marker-border-color-hover: #64748b;
-    --title-bar-font-size: 1.25rem;
 }
-
+}
