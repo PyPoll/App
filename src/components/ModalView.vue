@@ -1,10 +1,10 @@
 <template>
     <div class="flex w-0 h-0">
         <div @click="hide"
-            class="fixed top-0 left-0 z-50 w-full h-full flex justify-center items-center transition-all bg-slate-900/[0.1] dark:bg-slate-900/[0.6] p-4"
+            class="fixed top-0 left-0 z-50 w-full h-full flex justify-center items-center transition-all bg-slate-900/[0.1] dark:bg-slate-950/[0.4] p-4"
             :class="(catchingEvents ? 'pointer-events-auto' : 'pointer-events-none') + ' ' + (showing ? 'opacity-1' : 'opacity-0')">
             <div @click="ev => ev.stopPropagation()"
-                class="flex flex-col min-w-0 max-w-full p-4 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md shadow-lg bordered"
+                class="flex flex-col min-w-0 max-w-full p-4 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md shadow-lg rounded-md border border-slate-200 dark:border-slate-800/[0.5]"
                 :class="animation">
                 <slot />
             </div>
@@ -32,7 +32,6 @@ export default defineComponent({
         const interval = setInterval(() => {
             if (this.$route.fullPath !== basePath) {
                 clearInterval(interval);
-                this.hide();
                 this.$el.remove();
                 mainDiv.remove();
             }

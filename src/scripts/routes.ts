@@ -13,6 +13,8 @@ export default {
         POLLS: (id: number) => new Route(`users/${id}/polls`, METHOD.GET),
         FOLLOW: (id: number) => new Route(`users/${id}/follow`, METHOD.POST),
         UNFOLLOW: (id: number) => new Route(`users/${id}/follow`, METHOD.DELETE),
+        FOLLOWERS: (id: number) => new Route(`users/${id}/followers`, METHOD.GET),
+        FOLLOWING: (id: number) => new Route(`users/${id}/following`, METHOD.GET),
         ME: {
             GET: () => new Route(`users/me`, METHOD.GET),
             UPDATE: (pseudo: string | undefined, email: string | undefined = undefined, bio: string | undefined = undefined) => new Route(`users/me`, METHOD.PATCH, undefined, { pseudo, email, bio }),

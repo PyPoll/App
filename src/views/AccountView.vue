@@ -46,19 +46,21 @@
                     </div>
                 </div>
                 <div class="flex justify-center p-2 w-full h-fit">
-                    <div class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit">
+                    <button class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit"
+                        @click="displayFollowers">
                         <p class="text-xl font-bold"> {{ user?.nbFollowers ?? '--' }} </p>
                         <p class="text-base">
                             <GetText :context="Lang.CreateTranslationContext('account', 'Followers')" />
                         </p>
-                    </div>
+                    </button>
                     <span class="flex h-full w-0.5 bg-slate-600 dark:bg-slate-400 mx-4 rounded-full" />
-                    <div class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit">
+                    <button class="flex flex-col space-y-1 justify-center items-center w-1/2 h-fit"
+                        @click="displayFollowing">
                         <p class="text-xl font-bold"> {{ user?.nbFollowing ?? '--' }} </p>
                         <p class="text-base">
                             <GetText :context="Lang.CreateTranslationContext('account', 'Following')" />
                         </p>
-                    </div>
+                    </button>
                 </div>
             </div>
             <div class="flex flex-col h-full w-full sticky top-0">
@@ -75,6 +77,23 @@
                 </div>
             </div>
         </div>
+        <ModalView ref="users-popup">
+            <div class="flex flex-col justify-center items-center space-y-4">
+                <div class="flex justify-center items-center">
+                    <p class="text-xl font-semibold">
+                        {{ popupTitle }}
+                    </p>
+                </div>
+                <div class="flex overflow-auto">
+                    <UserCard :user="user" v-for="user in popupUsers" :key="user.pseudo" />
+                    <div v-show="!popupUsers.length">
+                        <p class="text-center text-md font-base">
+                            <GetText :context="Lang.CreateTranslationContext('account', 'NoUsers')" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </ModalView>
     </div>
 </template>
 
@@ -90,6 +109,8 @@ import Lang from '@/scripts/Lang';
 import GetText from '@/components/GetText.vue';
 import PollView from '@/components/content/PollView.vue';
 import FormatText from '@/components/content/FormatText.vue';
+import ModalView from '@/components/ModalView.vue';
+import UserCard from '@/components/search/UserCard.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -100,19 +121,19 @@ export default Vue.defineComponent({
         UserPlusIcon,
         CheckIcon,
         PollView,
+        ModalView,
+        UserCard,
         FormatText
-    },
-    setup() {
-        return {
-            Lang
-        }
     },
     data() {
         return {
+            Lang,
             user: undefined as User | undefined,
             urlID: parseInt(new URLSearchParams(window.location.search).get('id') ?? '-1'),
             followed: false,
             accountPolls: [] as any[],
+            popupTitle: '',
+            popupUsers: [] as User[]
         }
     },
     mounted() {
@@ -167,6 +188,33 @@ export default Vue.defineComponent({
             }
 
             this.loadUser();
+        },
+        async displayFollowers() {
+            if (!this.user) return;
+
+            this.popupTitle = await Lang.GetTextAsync(Lang.CreateTranslationContext('account', 'Followers'));
+
+            const res = await API.RequestLogged(ROUTES.USERS.FOLLOWERS(this.user.id));
+            if (res.error) {
+                console.error(res.message);
+            }
+
+            this.popupUsers = res.data;
+            (this.$refs['users-popup'] as any).show();
+        },
+        async displayFollowing() {
+            if (!this.user) return;
+
+            this.popupTitle = await Lang.GetTextAsync(Lang.CreateTranslationContext('account', 'Following'));
+
+            const res = await API.RequestLogged(ROUTES.USERS.FOLLOWING(this.user.id));
+            if (res.error) {
+                console.error(res.message);
+                return;
+            }
+
+            this.popupUsers = res.data;
+            (this.$refs['users-popup'] as any).show();
         }
     }
 });
