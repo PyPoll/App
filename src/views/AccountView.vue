@@ -40,8 +40,8 @@
                         </div>
                     </div>
                     <div class="flex justify-center opacity-70">
-                        <p class="italic text-center text-sm text-ellipsis overflow-hidden line-clamp-2"> {{ user?.bio
-                            }}
+                        <p class="italic text-center text-sm text-ellipsis overflow-hidden line-clamp-2">
+                            <FormatText :text="user?.bio ?? ''" />
                         </p>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ import ROUTES from '@/scripts/routes';
 import Lang from '@/scripts/Lang';
 import GetText from '@/components/GetText.vue';
 import PollView from '@/components/content/PollView.vue';
-import { Toast } from '@capacitor/toast';
+import FormatText from '@/components/content/FormatText.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -99,7 +99,8 @@ export default Vue.defineComponent({
         Cog6ToothIcon,
         UserPlusIcon,
         CheckIcon,
-        PollView
+        PollView,
+        FormatText
     },
     setup() {
         return {

@@ -1,7 +1,7 @@
 <template>
     <div ref="content"
         class="flex flex-col w-full h-full bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-50 overflow-hidden">
-        <RouterView />
+        <RouterView :key="$route.fullPath" />
     </div>
 </template>
 

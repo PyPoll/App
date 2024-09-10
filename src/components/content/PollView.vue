@@ -36,11 +36,11 @@
                 <div>
                     <p
                         class="text-xl md:text-2xl lg:text-3xl font-bold text-slate-600 dark:text-slate-300 line-clamp-3 overflow-ellipsis">
-                        {{ poll.title }}
+                        <FormatText :text="poll.title" />
                     </p>
                     <p
                         class="text-base md:text-xl lg:text-2xl font-semibold text-slate-500 dark:text-slate-400 line-clamp-3 overflow-ellipsis">
-                        {{ poll.description }}
+                        <FormatText :text="poll.description" />
                     </p>
                 </div>
                 <div v-if="poll.medias && poll.medias.length"
@@ -68,7 +68,7 @@
                         <div
                             class="flex min-w-0 max-w-full text-base md:text-xl lg:text-2xl font-semibold justify-center items-center h-full">
                             <p class="min-w-0 max-w-full whitespace-nowrap text-ellipsis overflow-hidden">
-                                {{ answer.label }}
+                                <FormatText :text="answer.label" />
                             </p>
                         </div>
                         <div v-show="isAnswered" class="flex grow min-w-fit max-h-full justify-end">
@@ -133,6 +133,7 @@ import ModalView from '../ModalView.vue';
 import GetText from '@/components/GetText.vue';
 import ButtonView from '../ButtonView.vue';
 import User from '@/scripts/User';
+import FormatText from './FormatText.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -141,6 +142,7 @@ export default Vue.defineComponent({
         ModalView,
         GetText,
         ButtonView,
+        FormatText,
         ShieldExclamationIcon
     },
     props: {
