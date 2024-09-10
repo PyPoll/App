@@ -165,12 +165,9 @@ export default defineComponent({
                 index++;
             }
 
-            this.done();
-        },
-        done() {
             this.uploadModal?.hide();
             setTimeout(() => {
-                this.$router.push({ name: 'content' });
+                this.$router.push({ name: 'content', query: { pollId: poll.id } });
             }, 250);
         },
         async createCompressedMedias() {

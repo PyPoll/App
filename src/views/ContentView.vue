@@ -106,8 +106,11 @@ export default Vue.defineComponent({
             }, 100);
         });
 
-        this.addPoll(this.$route.query.pollId ? parseInt(this.$route.query.pollId as string) : undefined);
-        this.addPoll();
+        this.addPoll(this.$route.query.pollId ? parseInt(this.$route.query.pollId as string) : undefined).then(() => {
+            if (this.polls.length <= 0 || this.polls[0] === null)
+                return;
+            this.addPoll();
+        });
 
         this.checkorBubbles();
     },
