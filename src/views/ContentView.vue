@@ -4,7 +4,7 @@
             <canvas ref="bubblesCanvas" class="w-full h-full" />
         </div>
         <div ref="contentView" class="show-down h-full w-full overflow-scroll snap-mandatory snap-y no-scrollbar">
-            <PollView v-for="poll in polls" :key="poll.id" :poll="poll" />
+            <PollView v-for="(poll, index) in polls" :key="index" :poll="poll" />
             <div v-if="polls.length <= 0 && !error"
                 class="show-up flex flex-col h-full w-full space-y-4 justify-center items-center">
                 <p class="text-center text-2xl font-semibold">
