@@ -16,5 +16,8 @@
     "DeleteAccount": "Supprimer le compte",
     "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?\nCette action est irréversible.",
     "Logout": "Se déconnecter",
-    "LogoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?\nVous perdrez ce compte temporaire."
+    "LogoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?\nVous perdrez ce compte temporaire.",
+    "LinkedAccounts": "Comptes liés",
+    "FurWazAccount": "Compte FurWaz",
+    "GoogleAccount": "Compte Google"
 }

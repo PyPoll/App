@@ -16,5 +16,8 @@
     "DeleteAccount": "Delete account",
     "DeleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?",
     "Logout": "Log out",
-    "LogoutConfirm": "Are you sure you want to log out?\nYou will lose this temporary account."
+    "LogoutConfirm": "Are you sure you want to log out?\nYou will lose this temporary account.",
+    "LinkedAccounts": "Linked accounts",
+    "FurWazAccount": "FurWaz account",
+    "GoogleAccount": "Google account"
 }

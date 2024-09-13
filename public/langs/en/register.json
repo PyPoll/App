@@ -7,5 +7,6 @@
     "Email": "Email",
     "Password": "Password",
     "PasswordConfirm": "Password confirmation",
-    "MissingField": "Please fill the field {field}"
+    "MissingField": "Please fill the field {field}",
+    "FurWaz": "Register with FurWaz"
 }

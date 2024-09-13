@@ -70,7 +70,9 @@
                             <RegisterButton :data="{ name: 'FurWaz' }" :selected="registerMode === 'FurWaz'"
                                 :display="!registerMode || registerMode === 'FurWaz'"
                                 @click="registerMode = registerMode ? undefined : 'FurWaz'">
-                                <p>Work in progress</p>
+                                <RegisterFurWaz>
+                                    <GetText :context="Lang.CreateTranslationContext('register', 'FurWaz')" />
+                                </RegisterFurWaz>
                             </RegisterButton>
                         </div>
                         <div v-show="registerMode === 'Unregistered'"
@@ -123,7 +125,9 @@
                             <RegisterButton :loginMode="true" :data="{ name: 'FurWaz' }"
                                 :selected="loginMode === 'FurWaz'" :display="!loginMode || loginMode === 'FurWaz'"
                                 @click="loginMode = loginMode ? undefined : 'FurWaz'">
-                                <p>Work in progress</p>
+                                <RegisterFurWaz>
+                                    <GetText :context="Lang.CreateTranslationContext('login', 'FurWaz')" />
+                                </RegisterFurWaz>
                             </RegisterButton>
                         </div>
                         <div class="flex justify-center items-center"
@@ -192,6 +196,7 @@ import InputView from '@/components/InputView.vue';
 import ButtonView from '@/components/ButtonView.vue';
 import LogZone from '@/components/LogZone.vue';
 import { Log } from '@/scripts/Logs';
+import RegisterFurWaz from '@/components/register/RegisterFurWaz.vue';
 
 export default Vue.defineComponent({
     components: {
@@ -205,7 +210,8 @@ export default Vue.defineComponent({
         LoadingIcon,
         InputView,
         ButtonView,
-        LogZone
+        LogZone,
+        RegisterFurWaz
     },
     setup() {
         return {}

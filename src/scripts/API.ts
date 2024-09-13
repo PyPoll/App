@@ -64,10 +64,13 @@ export class Route {
         if (this.query !== undefined && Object.keys(this.query).length > 0) {
             url += '?';
             for (const key in this.query) {
+                if (key === undefined || (this.query as any)[key] === undefined)
+                    continue;
                 url += `${key}=${(this.query as any)[key]}&`;
             }
             url = url.substring(0, url.length - 1);
         }
+        console.log("Built path is ", url);
         return url;
     }
 
@@ -103,7 +106,7 @@ export class Response {
             return new Response(
                 res.status,
                 json?.error ?? res.statusText,
-                undefined,
+                json?.data,
                 undefined,
                 TYPE.ERROR,
                 json?.field

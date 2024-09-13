@@ -27,6 +27,7 @@ class User {
     public nbFollowers: number;
     public nbFollowing: number;
     public token: string;
+    public furwazId: number;
 
     constructor(data: any) {
         this.id = data.id;
@@ -36,6 +37,7 @@ class User {
         this.nbFollowers = data.nbFollowers;
         this.nbFollowing = data.nbFollowing;
         this.token = data.token;
+        this.furwazId = data.furwazId;
     }
 
     public save() {
@@ -43,13 +45,19 @@ class User {
     }
 
     public update(data: any) {
-        this.id = data.id ?? this.id;
-        this.pseudo = data.pseudo ?? this.pseudo;
-        this.bio = data.bio ?? this.bio;
-        this.email = data.email ?? this.email;
-        this.nbFollowers = data.nbFollowers ?? this.nbFollowers;
-        this.nbFollowing = data.nbFollowing ?? this.nbFollowing;
-        this.token = data.token ?? this.token;
+        if (data.token) {
+            this.fetch();
+            return;
+        }
+
+        this.id = (data.id !== undefined) ? data.id : this.id;
+        this.pseudo = (data.pseudo !== undefined) ? data.pseudo : this.pseudo;
+        this.bio = (data.bio !== undefined) ? data.bio : this.bio;
+        this.email = (data.email !== undefined) ? data.email : this.email;
+        this.nbFollowers = (data.nbFollowers !== undefined) ? data.nbFollowers : this.nbFollowers;
+        this.nbFollowing = (data.nbFollowing !== undefined) ? data.nbFollowing : this.nbFollowing;
+        this.token = (data.token !== undefined) ? data.token : this.token;
+        this.furwazId = (data.furwazId !== undefined) ? data.furwazId : this.furwazId;
         this.save();
     }
 

@@ -10,5 +10,6 @@
     "EmailLogging": "Logging in by email ...",
     "EmailLogged": "Successfully logged in!",
     "EmailChanging": "Changing email ...",
-    "EmailChanged": "Email changed successfully!"
+    "EmailChanged": "Email changed successfully!",
+    "FurWaz": "Login with FurWaz"
 }

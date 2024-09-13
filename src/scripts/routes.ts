@@ -4,6 +4,16 @@ export default {
     AUTH: {
         TOKEN: () => new Route(`auth/token`, METHOD.GET),
         LOGIN: (token: string) => new Route(`auth/login`, METHOD.GET, { token }),
+        FURWAZ: {
+            GENERATE: () => new Route(`auth/furwaz/generate`, METHOD.POST),
+            TOKEN: (token: string, forcePseudo?: string, forceEmail?: string) => new Route(`auth/furwaz/token`, METHOD.GET, { token, pseudo: forcePseudo, email: forceEmail }),
+        },
+        LINK: {
+            FURWAZ: (token: string) => new Route(`auth/link/furwaz`, METHOD.POST, undefined, { token }),
+        },
+        UNLINK: {
+            FURWAZ: () => new Route(`auth/link/furwaz`, METHOD.DELETE),
+        }
     },
     USERS: {
         GET: (id: number | undefined = undefined) => new Route(`users${id ? `/${id}` : ''}`, METHOD.GET),

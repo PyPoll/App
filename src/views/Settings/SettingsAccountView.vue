@@ -52,6 +52,40 @@
                 <div class="flex flex-col w-full">
                     <div>
                         <h2 class="text-xl font-bold">
+                            <GetText :context="Lang.CreateTranslationContext('settings', 'LinkedAccounts')" />
+                        </h2>
+                    </div>
+                    <div class="flex flex-col space-y-4 p-2 w-full">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p>
+                                    <GetText :context="Lang.CreateTranslationContext('settings', 'GoogleAccount')" />
+                                </p>
+                            </div>
+                            <div>
+                                <p class="opacity-50">not available yet</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p>
+                                    <GetText :context="Lang.CreateTranslationContext('settings', 'FurWazAccount')" />
+                                </p>
+                            </div>
+                            <div>
+                                <ButtonView v-if="!User.CurrentUser?.furwazId" @click="linkFurWaz" :bg="true">
+                                    <GetText :context="Lang.CreateTranslationContext('verbs', 'Link')" />
+                                </ButtonView>
+                                <ButtonView v-else @click="unlinkFurWaz" :bg="true">
+                                    <GetText :context="Lang.CreateTranslationContext('verbs', 'UnLink')" />
+                                </ButtonView>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full">
+                    <div>
+                        <h2 class="text-xl font-bold">
                             <GetText :context="Lang.CreateTranslationContext('settings', 'Actions')" />
                         </h2>
                     </div>
@@ -140,7 +174,8 @@ import ButtonView from '@/components/ButtonView.vue';
 import {
     ArrowLeftStartOnRectangleIcon,
     ChevronRightIcon,
-    TrashIcon
+    TrashIcon,
+    CheckIcon
 } from '@heroicons/vue/24/outline';
 import Lang from '@/scripts/Lang';
 import GetText from '@/components/GetText.vue';
@@ -151,6 +186,7 @@ import ModalView from '@/components/ModalView.vue';
 import { API } from '@/scripts/API';
 import ROUTES from '@/scripts/routes';
 import TextAreaView from '@/components/TextAreaView.vue';
+import FurWazPortal from '@/scripts/FurWazPortal';
 
 export default Vue.defineComponent({
     components: {
@@ -162,7 +198,8 @@ export default Vue.defineComponent({
         ArrowLeftStartOnRectangleIcon,
         TrashIcon,
         ModalView,
-        TextAreaView
+        TextAreaView,
+        CheckIcon
     },
     setup() {
         return {
@@ -238,6 +275,26 @@ export default Vue.defineComponent({
                 User.Forget();
             } else {
                 (this.$refs['modal-logout'] as any).show();
+            }
+        },
+        async linkFurWaz() {
+            const portal = new FurWazPortal(undefined, ROUTES.AUTH.LINK.FURWAZ, true);
+            portal.on('ready', () => {
+                portal.open();
+            });
+            portal.on('success', async (data) => {
+                User.CurrentUser?.update(data);
+            });
+            portal.on('error', (error) => {
+                console.error(error);
+            });
+        },
+        async unlinkFurWaz() {
+            const res = await API.RequestLogged(ROUTES.AUTH.UNLINK.FURWAZ());
+            if (res.error) {
+                console.error(res.message);
+            } else {
+                User.CurrentUser?.update(res.data);
             }
         }
     }

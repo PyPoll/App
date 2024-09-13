@@ -67,5 +67,11 @@
     "Added": "Ajouté",
     "Back": "Retour",
     "Backing": "Retour en cours",
-    "Backed": "Retourné"
+    "Backed": "Retourné",
+    "Link": "Lier",
+    "Linking": "Liaison en cours",
+    "Linked": "Lié",
+    "UnLink": "Déconnecter",
+    "UnLinking": "Déconnexion en cours",
+    "UnLinked": "Déconnecté"
 }

@@ -9,5 +9,6 @@
     "EmailLogging": "Connexion par email ...",
     "EmailLogged": "Connecté avec succès !",
     "EmailChanging": "Changement d'email ...",
-    "EmailChanged": "Email changé avec succès !"
+    "EmailChanged": "Email changé avec succès !",
+    "FurWaz": "Se connecter avec FurWaz"
 }
