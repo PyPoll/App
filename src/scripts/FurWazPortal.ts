@@ -102,7 +102,7 @@ export default class FurWazPortal {
         const url = `https://furwaz.com/portal?token=${this.portalToken}`;
         switch (mode) {
             case 'tab': {
-                const tab = window.open(url, '_blank');
+                const tab = window.open(url + '&redirect=' + encodeURIComponent(window.location.href), '_blank');
                 if (!tab) {
                     console.error('FurWazPortal open error', 'tab blocked');
                     this.open('redirect');

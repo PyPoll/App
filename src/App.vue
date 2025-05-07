@@ -58,7 +58,11 @@ export default Vue.defineComponent({
         });
 
         // setup api
-        API.Setup(import.meta.env.VITE_API_URL);
+        if (import.meta.env.VITE_API_URL) {
+            API.Setup(import.meta.env.VITE_API_URL);
+        } else {
+            console.error('API URL not set. Please set VITE_API_URL in .env file.');
+        }
 
         // Check if user is still valid
         if (User.CurrentUser) {

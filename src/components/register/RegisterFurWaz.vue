@@ -3,7 +3,7 @@
         class="flex w-full h-full justify-center items-center p-2 space-x-2 rounded-lg shadow-lg bg-slate-50 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200
         hover:border-2 border-slate-300 hover:dark:border-slate-500 transition-all hover:text-slate-800 hover:dark:text-slate-50">
         <div class="flex justify-center items-center h-full w-16">
-            <img src="https://furwaz.com/img/icon.png" alt="FurWaz Logo" class="w-12 h-12">
+            <img src="https://furwaz.com/icon.png" alt="FurWaz Logo" class="w-12 h-12">
         </div>
         <div class="flex justify-center items-center h-full grow">
             <p class="w-fit h-fit">

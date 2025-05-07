@@ -160,6 +160,10 @@ export class API {
         API.protocol = window.location.protocol.endsWith(':')
             ? window.location.protocol.substring(0, window.location.protocol.length - 1)
             : window.location.protocol;
+        // debug condition : allow https if on localhost
+        if (window.location.host === 'localhost' && host.startsWith('https')) {
+            API.protocol = 'https';
+        }
     }
 
     public static CheckSetup() {
